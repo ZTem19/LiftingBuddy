@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <th>Muscle Group</th>
+      <th>First Interval Volume</th>
+      <th>Last Interval Volume</th>
+      <th>Max Volume</th>
+      <th>Min Volume</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of intervalProgressMap.entries(); track item[0]) {
+    <tr>
+      <td>{{ getMuscleGroupName(item[0]) }}</td>
+      <td>{{ item[1].volumeFirstInterval }}</td>
+      <td>{{ item[1].volumeLastInterval }}</td>
+      <td>{{ item[1].volumeMax }}</td>
+      <td>{{ item[1].volumeMin }}</td>
+    </tr>
+    }
+  </tbody>
+</table>

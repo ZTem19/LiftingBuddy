@@ -1,0 +1,21 @@
+<h1>Total Volume Performed For Exercise Worked</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Exercise</th>
+      <th>Volume</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (entry of volumeExerciseMap.entries(); track entry[0]) {
+    <tr>
+      <td>{{ entry[0].name }}</td>
+      <td>{{ entry[1] }}</td>
+    </tr>
+    }
+    @empty 
+    {
+      <p>Sorry, there are no exercises to show.</p>
+    }
+  </tbody>
+</table>
