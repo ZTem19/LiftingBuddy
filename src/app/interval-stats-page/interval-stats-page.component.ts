@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { VolumeMuscleGroupComponent } from '../volume-muscle-group/volume-muscle-group.component';
 import { VolumeExerciseComponent } from "../volume-exercise/volume-exercise.component";
+import { PercentageMuscleGroupWorkedComponent } from '../percentage-muscle-group-worked/percentage-muscle-group-worked.component';
 
 @Component({
   selector: 'app-interval-stats-page',
-  imports: [VolumeMuscleGroupComponent, FormsModule, VolumeExerciseComponent],
+  imports: [VolumeMuscleGroupComponent, FormsModule, VolumeExerciseComponent, PercentageMuscleGroupWorkedComponent],
   templateUrl: './interval-stats-page.component.html',
   styleUrl: './interval-stats-page.component.css'
 })

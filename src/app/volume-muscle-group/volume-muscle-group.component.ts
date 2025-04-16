@@ -27,6 +27,7 @@ export class VolumeMuscleGroupComponent implements OnChanges {
   
   ngOnChanges(): void 
   {
+    // Get volumes for each muscle group to display based on start date and end date from parent
     this.volumeMuscleGroupMap = this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
 
     this.chestVolume = this.volumeMuscleGroupMap.get(MuscleGroup.Chest) ?? 0;
