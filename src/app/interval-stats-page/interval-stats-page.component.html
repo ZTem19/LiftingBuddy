@@ -1,0 +1,37 @@
+<h1>Stats for Specified Interval</h1>
+<form #dateForm="ngForm" (ngSubmit)="onSubmit(dateForm)">
+  <label for="start-date">Start Date:</label>
+  <input
+    type="date"
+    id="start-date"
+    name="startDate"
+    ngModel
+    required
+  /><br /><br />
+
+  <label for="end-date">End Date:</label>
+  <input
+    type="date"
+    id="end-date"
+    name="endDate"
+    ngModel
+    required
+  /><br /><br />
+
+  <button type="submit">Submit</button>
+</form>
+
+@if(showStats) {
+<app-volume-muscle-group
+  [startDate]="startDate"
+  [endDate]="endDate"
+></app-volume-muscle-group>
+<app-percentage-muscle-group-worked
+  [startDate]="startDate"
+  [endDate]="endDate"
+></app-percentage-muscle-group-worked>
+<app-volume-exercise
+  [startDate]="startDate"
+  [endDate]="endDate"
+></app-volume-exercise>
+}

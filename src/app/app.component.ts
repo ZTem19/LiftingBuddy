@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
+import { IntervalStatsPageComponent } from './interval-stats-page/interval-stats-page.component';
+import { IntervalProgressComponent } from "./interval-progress/interval-progress.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent],
+  imports: [RouterOutlet, IntervalStatsPageComponent, IntervalProgressComponent, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'LiftingBuddy';
+  title = 'final-project-ideas';
 }
