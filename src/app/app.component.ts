@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
-import { IntervalStatsPageComponent } from './interval-stats-page/interval-stats-page.component';
-import { IntervalProgressComponent } from "./interval-progress/interval-progress.component";
+import { TitleBarComponent } from './title-bar/title-bar.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, IntervalStatsPageComponent, IntervalProgressComponent, NavbarComponent],
+  imports: [RouterOutlet, NavbarComponent, TitleBarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

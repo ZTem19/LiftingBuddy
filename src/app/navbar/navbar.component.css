@@ -1,0 +1,8 @@
+.navbar {
+  background-image: linear-gradient(to bottom right, white, black);
+  padding: 1em 0.5em 1em 0.5em;
+}
+
+.navbar > * {
+  font-size: 1.2em;
+}
