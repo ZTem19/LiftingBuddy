@@ -1,8 +1,22 @@
 .navbar {
-  background-image: linear-gradient(to bottom right, white, black);
+  background-image: linear-gradient(to bottom, darkgrey, black);
   padding: 1em 0.5em 1em 0.5em;
 }
 
-.navbar > * {
-  font-size: 1.2em;
+.navlink {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #f0f0f0;
+  text-shadow: 0 0 1em black;
+  cursor: pointer;
+}
+
+.navbar > * :hover {
+  text-shadow: 0 0 2em white;
+  scale: 105%;
+}
+
+.w-10 {
+  width: 10%;
+  min-width: fit-content;
 }
