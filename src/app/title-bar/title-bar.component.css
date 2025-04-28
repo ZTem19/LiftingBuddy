@@ -1,0 +1,10 @@
+.titlebar {
+  border: 0.3em solid grey;
+  background-color: darkgrey;
+  align-items: center;
+  justify-items: center;
+}
+
+.titlebar > * {
+  font-size: 2em;
+}
