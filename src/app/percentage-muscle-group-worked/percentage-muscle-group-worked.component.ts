@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, AfterViewInit, ElementRef, ViewChild, OnChanges } from '@angular/core';
 import { IntervalServiceService } from '../interval-service.service';
 import { MuscleGroup } from '../../data types/data-types';
 import {
@@ -14,26 +14,41 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
   templateUrl: './percentage-muscle-group-worked.component.html',
   styleUrl: './percentage-muscle-group-worked.component.css'
 })
-export class PercentageMuscleGroupWorkedComponent implements AfterViewInit{
+export class PercentageMuscleGroupWorkedComponent{
   @Input() startDate!: Date;
   @Input() endDate!: Date;
 
   volumeMuscleGroupMap: Map<MuscleGroup, number> = new Map();
 
   @ViewChild('pieCanvas') pieCanvas!: ElementRef;
-  pieChart: any;
+  pieChart: Chart | null = null;
 
-  constructor(private intervalService: IntervalServiceService) {}
-  
+  viewInitialized = false;
 
-  ngOnChanges(): void 
-  {
-    // Get volumes for each muscle group to display based on start date and end date from parent
-    this.volumeMuscleGroupMap = this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
+  constructor(private intervalService: IntervalServiceService) {
+    Chart.register(...registerables, ChartDataLabels);
   }
 
   ngAfterViewInit(): void {
-    Chart.register(... registerables, ChartDataLabels);
+    this.viewInitialized = true;
+    // If inputs were already set before view was ready, draw the chart now
+    if (this.startDate && this.endDate) {
+      this.volumeMuscleGroupMap = this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
+      this.updateChart();
+    }
+  }
+
+  ngOnChanges(): void {
+    if (this.startDate && this.endDate && this.viewInitialized) {
+      this.volumeMuscleGroupMap = this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
+      this.updateChart();
+    }
+  }
+
+  updateChart(): void {
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
     
     // Define the chart labels (muscle groups)
     const labels = ["Chest", "Back", "Biceps", "Triceps", "Glutes/Quads", "Hamstrings/Calves"];
@@ -114,4 +129,3 @@ export class PercentageMuscleGroupWorkedComponent implements AfterViewInit{
     });
   }
 }
-
