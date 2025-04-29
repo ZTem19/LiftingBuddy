@@ -1,8 +1,33 @@
+/* Colors hex values are in the sytle.css file 
+ */
+
 .navbar {
-  background-image: linear-gradient(to bottom right, white, black);
+  background-image: linear-gradient(to bottom, #9290c3, #070f2b);
   padding: 1em 0.5em 1em 0.5em;
 }
 
-.navbar > * {
-  font-size: 1.2em;
+.navbar > * :hover {
+  text-shadow: 0 0 2em #1b1a55;
+  scale: 105%;
+}
+
+.w-10 {
+  max-width: 10%;
+  width: 10%;
+  min-width: fit-content;
+}
+
+.navlink {
+  font-size: 1.5em;
+  font-weight: 600;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  color: #f0f0f0;
+}
+
+.extend_button {
+}
+
+.route_active {
+  color: #070f2b;
 }

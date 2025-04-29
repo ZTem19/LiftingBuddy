@@ -1,4 +1,12 @@
-.w-10 {
-  width: 10%;
-  min-width: fit-content;
+.layout {
+  overflow: hidden;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+}
+
+.main {
+  overflow-y: auto;
 }
