@@ -26,4 +26,16 @@ export class NavbarComponent implements OnInit {
       this.isNavbarExtended = true;
     }
   }
+
+  //Change links here to edit links and paths for routerlink
+  //First string the display of the navbar and the second is the path for routerlink
+  links: [string, string][] = [
+    ['Home', ''],
+    ['Interval Stat', '/interval-stats'],
+    ['Pages', 'pages'],
+    ['Here', 'here'],
+    ['Like', 'like'],
+    ['Calendar Test', 'calendar'],
+    ['Settings', 'settings'],
+  ];
 }

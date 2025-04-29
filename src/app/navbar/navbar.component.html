@@ -1,20 +1,24 @@
 <div class="navbar h-100 w-10">
   @if(isNavbarExtended){
   <!-- Extended navbar -->
-  <div class="d-flex flex-column h-100">
-    <p class="p-2 navlink" routerLink="">Home</p>
-    <p class="p-2 navlink">Interval Stats</p>
-    <p class="p-2 navlink">Pages</p>
-    <p class="p-2 navlink">Here</p>
-    <p class="p-2 navlink">Like</p>
-    <p class="p-2 navlink">This</p>
-    <p class="p-2 navlink">Settings</p>
+  <div class="d-flex flex-column h-100 w-100">
+    @for (link of links; track $index){
+    <p
+      class="p-2 navlink"
+      [routerLinkActive]="'route_active'"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="link[1]"
+    >
+      {{ link[0] }}
+    </p>
+    }
+
     <span class="flex-grow-1"></span>
   </div>
   } @else {
   <!-- Collasped navbar -->
   <div>
-    <p>collasped</p>
+    <div class="extend_button"></div>
   </div>
   }
 </div>

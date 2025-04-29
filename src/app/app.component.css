@@ -1,0 +1,12 @@
+.layout {
+  overflow: hidden;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+}
+
+.main {
+  overflow-y: auto;
+}
