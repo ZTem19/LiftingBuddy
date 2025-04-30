@@ -1,3 +1,12 @@
-<h1>Percentage of Muscle Groups Worked</h1>
-<canvas #pieCanvas></canvas>
-
+<h2 class="text-center">Percentage of Muscle Groups Worked</h2>
+<div class="d-flex justify-content-center">
+  <canvas #pieCanvas class="w-50 h-auto" [hidden]="!shouldShowChart || !isLoaded"></canvas>
+</div>
+@if (isLoaded == false){
+  <p class="text-center">Loading</p>
+}
+@else if(shouldShowChart == false) {
+<p class="text-center">
+  There are no muscle groups worked so the pie chart is empty.
+</p>
+}

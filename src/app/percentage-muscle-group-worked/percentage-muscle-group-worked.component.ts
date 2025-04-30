@@ -23,7 +23,9 @@ export class PercentageMuscleGroupWorkedComponent{
   @ViewChild('pieCanvas') pieCanvas!: ElementRef;
   pieChart: Chart | null = null;
 
-  viewInitialized = false;
+  viewInitialized: boolean = false;
+  shouldShowChart: boolean = true;
+  isLoaded: boolean = true;
 
   constructor(private intervalService: IntervalServiceService) {
     Chart.register(...registerables, ChartDataLabels);
@@ -33,16 +35,22 @@ export class PercentageMuscleGroupWorkedComponent{
     this.viewInitialized = true;
     // If inputs were already set before view was ready, draw the chart now
     if (this.startDate && this.endDate) {
-      this.volumeMuscleGroupMap = this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
-      this.updateChart();
+      this.loadVolumeData();
     }
   }
 
   ngOnChanges(): void {
     if (this.startDate && this.endDate && this.viewInitialized) {
-      this.volumeMuscleGroupMap = this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
-      this.updateChart();
+      this.loadVolumeData();
     }
+  }
+
+  async loadVolumeData()
+  {
+    this.isLoaded = false;
+    this.volumeMuscleGroupMap = await this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
+    this.updateChart();
+    this.isLoaded = true;
   }
 
   updateChart(): void {
@@ -53,9 +61,27 @@ export class PercentageMuscleGroupWorkedComponent{
     // Define the chart labels (muscle groups)
     const labels = ["Chest", "Back", "Biceps", "Triceps", "Glutes/Quads", "Hamstrings/Calves"];
     // Get data values from a Map that tracks volume per muscle group
-    const dataValues = Array.from(this.volumeMuscleGroupMap.values());
+    const rawData = Array.from(this.volumeMuscleGroupMap.values());
     // Calculate the total volume (sum of all data values)
-    const total = dataValues.reduce((a, b) => a + b, 0);
+    const total = rawData.reduce((a, b) => a + b, 0);
+
+    // Get filtered labels and data (skip zeroes)
+    const filteredLabels: string[] = [];
+    const filteredData: number[] = [];
+
+    labels.forEach((label, i) => {
+      if (rawData[i] > 0) {
+        filteredLabels.push(label);
+        filteredData.push(rawData[i]);
+      }
+    });
+
+    // Save whether we should render the chart
+    this.shouldShowChart = total > 0 && filteredData.length > 0;
+
+    if (!this.shouldShowChart) {
+      return; // Skip rendering the chart entirely
+    }
 
     // Custom plugin to draw the total in the bottom-left of the chart
     const totalBottomLeftPlugin = {
@@ -69,6 +95,7 @@ export class PercentageMuscleGroupWorkedComponent{
 
         // Set the font style and text appearance
         ctx.font = 'bold 14px sans-serif';
+        ctx.fillStyle = '#f0f0f0';
         ctx.fillStyle = '#333';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'bottom';
@@ -89,10 +116,10 @@ export class PercentageMuscleGroupWorkedComponent{
     this.pieChart = new Chart(this.pieCanvas.nativeElement, {
       type: 'pie',
       data: {
-        labels: labels,
+        labels: filteredLabels,
         datasets: [{
           // Values for each slice
-          data: dataValues,
+          data: filteredData,
           backgroundColor: [
             '#FF6384',
             '#36A2EB',
@@ -109,10 +136,12 @@ export class PercentageMuscleGroupWorkedComponent{
           legend: {
             // Position the legend at the top
             position: 'top',
+            labels: {
+              color: '#f0f0f0'
+            }
           },
           datalabels: {
-            // White text on pie slices
-            color: '#fff',
+            color: '#f0f0f0',
             font: {
               weight: 'bold'
             },

@@ -30,19 +30,21 @@
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    @if(showStats) {
+    <app-volume-muscle-group
+      [startDate]="startDate"
+      [endDate]="endDate"
+    ></app-volume-muscle-group>
+    <app-percentage-muscle-group-worked
+      [startDate]="startDate"
+      [endDate]="endDate"
+    ></app-percentage-muscle-group-worked>
+    <app-volume-exercise
+      [startDate]="startDate"
+      [endDate]="endDate"
+    ></app-volume-exercise>
+    }
   </div>
-  @if(showStats) {
-  <app-volume-muscle-group
-    [startDate]="startDate"
-    [endDate]="endDate"
-  ></app-volume-muscle-group>
-  <app-percentage-muscle-group-worked
-    [startDate]="startDate"
-    [endDate]="endDate" 
-  ></app-percentage-muscle-group-worked>
-  <app-volume-exercise
-    [startDate]="startDate"
-    [endDate]="endDate"
-  ></app-volume-exercise>
-  }
 </div>
+
+<button (click)="addExercise()">Button from Hell</button>

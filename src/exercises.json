@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Bench Press",
+    "description": "A barbell exercise that targets the pectoral muscles by pressing the weight upward from the chest.",
+    "muscleGroupWorked": 1
+  },
+  {
+    "name": "Incline Dumbbell Press",
+    "description": "Performed on an incline bench to emphasize the upper chest using dumbbells.",
+    "muscleGroupWorked": 1
+  },
+  {
+    "name": "Chest Fly",
+    "description": "Isolates the chest muscles using dumbbells or cables in a wide arc motion.",
+    "muscleGroupWorked": 1
+  },
+  {
+    "name": "Deadlift",
+    "description": "A compound lift targeting the entire posterior chain including the lower back and upper back.",
+    "muscleGroupWorked": 2
+  },
+  {
+    "name": "Lat Pulldown",
+    "description": "Targets the latissimus dorsi by pulling a cable bar down to the chest.",
+    "muscleGroupWorked": 2
+  },
+  {
+    "name": "Bent Over Row",
+    "description": "A barbell or dumbbell movement that works the mid and upper back muscles.",
+    "muscleGroupWorked": 2
+  },
+  {
+    "name": "Barbell Curl",
+    "description": "A classic biceps exercise performed by curling a barbell toward the chest.",
+    "muscleGroupWorked": 3
+  },
+  {
+    "name": "Hammer Curl",
+    "description": "Uses a neutral grip to work both the biceps and the brachialis muscle.",
+    "muscleGroupWorked": 3
+  },
+  {
+    "name": "Preacher Curl",
+    "description": "Isolates the biceps by resting arms on a pad and curling a bar or dumbbell.",
+    "muscleGroupWorked": 3
+  },
+  {
+    "name": "Triceps Pushdown",
+    "description": "Performed on a cable machine to extend the arms and target the triceps.",
+    "muscleGroupWorked": 4
+  },
+  {
+    "name": "Overhead Triceps Extension",
+    "description": "Dumbbell or cable movement targeting the long head of the triceps.",
+    "muscleGroupWorked": 4
+  },
+  {
+    "name": "Close-Grip Bench Press",
+    "description": "A variation of the bench press with hands close together to emphasize triceps.",
+    "muscleGroupWorked": 4
+  },
+  {
+    "name": "Back Squat",
+    "description": "A barbell squat that primarily targets the glutes and quads.",
+    "muscleGroupWorked": 5
+  },
+  {
+    "name": "Leg Press",
+    "description": "A machine exercise that presses weight with the legs to build quad and glute strength.",
+    "muscleGroupWorked": 5
+  },
+  {
+    "name": "Walking Lunge",
+    "description": "A dynamic movement targeting the quads and glutes with each step forward.",
+    "muscleGroupWorked": 5
+  },
+  {
+    "name": "Romanian Deadlift",
+    "description": "Focuses on the hamstrings and glutes with minimal knee movement.",
+    "muscleGroupWorked": 6
+  },
+  {
+    "name": "Leg Curl",
+    "description": "Isolates the hamstrings using a machine that curls the legs toward the body.",
+    "muscleGroupWorked": 6
+  },
+  {
+    "name": "Standing Calf Raise",
+    "description": "Strengthens the calf muscles by raising the heels while standing.",
+    "muscleGroupWorked": 6
+  }
+]
