@@ -105,5 +105,6 @@ export class CalendarComponent implements OnInit {
       default:
         return '#f0f0f0';
     }
+    console.log(this.calendarDates);
   }
 }

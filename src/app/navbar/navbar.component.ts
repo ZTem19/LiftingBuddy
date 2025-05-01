@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
     this.onResize('');
+    this.onResize('');
   }
 
   //Get width of window when dom is resized
