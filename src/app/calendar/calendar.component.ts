@@ -7,17 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './calendar.component.css',
 })
 export class CalendarComponent implements OnInit {
-  calendarDates?: number[];
+  calendarDates?: Date[];
 
   ngOnInit(): void {
-    // let currentDate = new Date();
-    // console.log(currentDate.getDate());
-    // console.log(currentDate.getDay());
+    let currentDate = new Date();
+    console.log(currentDate.getDate());
+    console.log(currentDate.getDay());
 
     let max = 90;
-    this.calendarDates = Array<number>();
+    this.calendarDates = Array<Date>();
     for (let i = max; i > 0; i--) {
-      this.calendarDates?.push(i);
+      this.calendarDates?.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() - i);
     }
+    console.log(this.calendarDates);
   }
 }

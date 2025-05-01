@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../data types/data-types';
-import { FetchServiceService } from '../fetch-service.service';
+import { UserAuthenticationService } from '../user-authentication.service';
 
 @Component({
   selector: 'app-home-page',
@@ -10,9 +10,9 @@ import { FetchServiceService } from '../fetch-service.service';
 })
 export class HomePageComponent implements OnInit {
   users?: User[];
-  fetchService = inject(FetchServiceService);
+  userService = inject(UserAuthenticationService);
 
   ngOnInit() {
-    this.fetchService.getUsers().subscribe((users) => (this.users = users));
+    this.userService.getUsers().subscribe((users) => (this.users = users));
   }
 }
