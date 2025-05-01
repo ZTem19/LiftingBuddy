@@ -1,1 +1,34 @@
-<p>muscle-group-progress-page works!</p>
+<h2>Muscle Group Progress</h2>
+
+<div class="date-picker-container">
+  <!-- Start Date -->
+  <div class="date-picker">
+    <label for="start-date">Start Date:</label>
+    <input type="date" id="start-date" name="startDate" />
+  </div>
+
+  <!-- Muscle Group Dropdown -->
+  <div class="date-picker">
+    <label for="muscle-select">Muscle Group:</label>
+    <select id="muscle-select" class="muscle-dropdown">
+      <option *ngFor="let muscle of muscleGroups" [value]="muscle">{{ muscle }}</option>
+    </select>
+  </div>
+
+  <!-- End Date -->
+  <div class="date-picker">
+    <label for="end-date">End Date:</label>
+    <input type="date" id="end-date" name="endDate" />
+  </div>
+</div>
+
+<br />
+
+<button (click)="retrieveStatistics()">Retrieve Statistics</button>
+
+<br /><br />
+
+<!-- Chart Section -->
+<div class="chart-container">
+  <canvas #myChartCanvas></canvas>
+</div>
