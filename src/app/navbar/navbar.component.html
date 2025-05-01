@@ -1,8 +1,13 @@
 <div class="navbar h-100 w-10">
-  @if(isNavbarExtended){
+  <!--@if(isNavbarExtended){ -->
   <!-- Extended navbar -->
   <div class="d-flex flex-column h-100 w-100">
-    @for (link of links; track $index){
+    <button class="extend_button" (click)="onNavbarBtnClick()">
+      <hr />
+      <hr />
+      <hr />
+    </button>
+    @if(isNavbarExtended){ @for (link of links; track $index){
     <p
       class="p-2 navlink"
       [routerLinkActive]="'route_active'"
@@ -11,14 +16,19 @@
     >
       {{ link[0] }}
     </p>
-    }
+    } }
 
     <span class="flex-grow-1"></span>
   </div>
-  } @else {
+  <!-- } @else { -->
   <!-- Collasped navbar -->
-  <div>
-    <div class="extend_button"></div>
-  </div>
-  }
+  <!-- <div class="w-100 h-100 f-flex">
+    <button class="extend_button" (click)="onNavbarBtnClick()">
+      <hr />
+      <hr />
+      <hr />
+    </button>
+    <span class="flex-grow-1"></span>
+  </div> -->
+  <!-- } -->
 </div>

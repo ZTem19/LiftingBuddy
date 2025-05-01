@@ -1,15 +1,13 @@
-<div class="w-100 h-100 page">
-  <div class="calendar">
-    <p class="dayheader">Sun</p>
-    <p class="dayheader">Mon</p>
-    <p class="dayheader">Tues</p>
-    <p class="dayheader">Wed</p>
-    <p class="dayheader">Thrus</p>
-    <p class="dayheader">Fri</p>
-    <p class="dayheader">Sat</p>
+<div class="calendar">
+  <p class="dayheader">Sun</p>
+  <p class="dayheader">Mon</p>
+  <p class="dayheader">Tues</p>
+  <p class="dayheader">Wed</p>
+  <p class="dayheader">Thrus</p>
+  <p class="dayheader">Fri</p>
+  <p class="dayheader">Sat</p>
 
-    @for (day of calendarDates; track $index) {
-    <p class="daycell">{{ day }}</p>
-    }
-  </div>
+  @for (day of calendarDates; track $index) {
+  <p class="daycell">{{ day.getDate() }}</p>
+  }
 </div>
