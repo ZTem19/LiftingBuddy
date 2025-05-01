@@ -1,0 +1,38 @@
+<div class="w-100 min-vh-100 page">
+  <h1>Exercise Progress</h1>
+
+  <div class="date-picker-container">
+    <!-- Start Date -->
+    <div class="date-picker">
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" name="startDate" />
+    </div>
+
+    <!-- Exercise Dropdown -->
+    <div class="date-picker">
+      <label for="exercise-select">Exercise:</label>
+      <select id="exercise-select" class="exercise-dropdown">
+        <option *ngFor="let exercise of exercises" [value]="exercise">
+          {{ exercise }}
+        </option>
+      </select>
+    </div>
+
+    <!-- End Date -->
+    <div class="date-picker">
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date" name="endDate" />
+    </div>
+  </div>
+
+  <br />
+
+  <button (click)="retrieveStatistics()" class="btn btn-primary">Submit</button>
+
+  <br /><br />
+
+  <!-- Chart Section -->
+  <div class="chart-container">
+    <canvas #myChartCanvas></canvas>
+  </div>
+</div>

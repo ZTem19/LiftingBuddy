@@ -3,6 +3,8 @@ import { IntervalStatsPageComponent } from './interval-stats-page/interval-stats
 import { IntervalProgressComponent } from './interval-progress/interval-progress.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { MuscleGroupProgressPageComponent } from './muscle-group-progress-page/muscle-group-progress-page.component';
+import { ExerciseProgressPageComponent } from './exercise-progress-page/exercise-progress-page.component';
 import { DayPageComponent } from './day-page/day-page.component';
 
 //add paths here for different pages
@@ -22,5 +24,12 @@ export const routes: Routes = [
   {
     path: 'day',
     component: DayPageComponent,
+  },
+
+  { path: 'exercise-progress-page', component: ExerciseProgressPageComponent },
+
+  {
+    path: 'muscle-group-progress-page',
+    component: MuscleGroupProgressPageComponent,
   },
 ];
