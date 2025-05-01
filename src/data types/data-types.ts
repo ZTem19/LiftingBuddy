@@ -8,9 +8,10 @@ export enum MuscleGroup {
 }
 
 export interface Exercise {
+  id: string;
   name: string;
   description: string;
-  muscleGroupWorked: MuscleGroup;
+  muscleGroup: MuscleGroup;
 }
 
 export interface Set {
@@ -19,6 +20,7 @@ export interface Set {
 }
 
 export interface ExerciseSet {
+  
   exercise: Exercise;
   sets: Set[];
   totalVolume: number;

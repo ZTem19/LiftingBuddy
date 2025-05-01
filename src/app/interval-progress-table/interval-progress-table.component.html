@@ -1,4 +1,6 @@
-<table>
+<h1 class="text-center mb-5">Progress Report</h1>
+@if(isLoaded == true) {
+<table class="table-bordered table-striped table-hover mt-3">
   <thead>
     <tr>
       <th>Muscle Group</th>
@@ -20,3 +22,8 @@
     }
   </tbody>
 </table>
+}
+@else 
+{
+  <p class="text-center">Loading</p>
+}

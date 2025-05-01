@@ -16,10 +16,18 @@ export class IntervalProgressTableComponent implements OnChanges {
   intervalProgressMap: Map<MuscleGroup, MuscleGroupProgress> = new Map();
   constructor(private intervalService: IntervalServiceService) {}
   chestMax: number = 1;
+  isLoaded: boolean = true;
 
   ngOnChanges(): void 
   {
-    this.intervalProgressMap = this.intervalService.GetIntervalProgress(this.startDate, this.numDays, this.numIntervals);
+    this.loadData();
+  }
+
+  async loadData()
+  {
+    this.isLoaded = false;
+    this.intervalProgressMap = await this.intervalService.GetIntervalProgress(this.startDate, this.numDays, this.numIntervals);
+    this.isLoaded = true;
   }
 
   // used to get names of muscle groups based on enum type

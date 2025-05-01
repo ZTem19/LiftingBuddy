@@ -1,37 +1,50 @@
-<h1>Stats for Specified Interval</h1>
-<form #dateForm="ngForm" (ngSubmit)="onSubmit(dateForm)">
-  <label for="start-date">Start Date:</label>
-  <input
-    type="date"
-    id="start-date"
-    name="startDate"
-    ngModel
-    required
-  /><br /><br />
+<div class="w-100 min-vh-100 page">
+  <h1 class="text-center">Stats for Specified Interval</h1>
+  <div class="container">
+    <form #dateForm="ngForm" (ngSubmit)="onSubmit(dateForm)">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="start-date" class="me-2">Start Date:</label>
+            <input
+              type="date"
+              id="start-date"
+              name="startDate"
+              ngModel
+              required
+            /><br /><br />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="end-date" class="me-2">End Date:</label>
+            <input
+              type="date"
+              id="end-date"
+              name="endDate"
+              ngModel
+              required
+            /><br /><br />
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    @if(showStats) {
+    <app-volume-muscle-group
+      [startDate]="startDate"
+      [endDate]="endDate"
+    ></app-volume-muscle-group>
+    <app-percentage-muscle-group-worked
+      [startDate]="startDate"
+      [endDate]="endDate"
+    ></app-percentage-muscle-group-worked>
+    <app-volume-exercise
+      [startDate]="startDate"
+      [endDate]="endDate"
+    ></app-volume-exercise>
+    }
+  </div>
+</div>
 
-  <label for="end-date">End Date:</label>
-  <input
-    type="date"
-    id="end-date"
-    name="endDate"
-    ngModel
-    required
-  /><br /><br />
-
-  <button type="submit">Submit</button>
-</form>
-
-@if(showStats) {
-<app-volume-muscle-group
-  [startDate]="startDate"
-  [endDate]="endDate"
-></app-volume-muscle-group>
-<app-percentage-muscle-group-worked
-  [startDate]="startDate"
-  [endDate]="endDate"
-></app-percentage-muscle-group-worked>
-<app-volume-exercise
-  [startDate]="startDate"
-  [endDate]="endDate"
-></app-volume-exercise>
-}
+<button (click)="addExercise()">Button from Hell</button>

@@ -1,29 +1,43 @@
-<h1>Total Volume Performed for Muscle Group</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Muscle Group</th>
-      <th>Volume Worked</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Chest: {{ chestVolume }}</td>
-    </tr>
-    <tr>
-      <td>Back: {{ backVolume }}</td>
-    </tr>
-    <tr>
-      <td>Biceps: {{ bicepsVolume }}</td>
-    </tr>
-    <tr>
-      <td>Tricpes: {{ tricepsVolume }}</td>
-    </tr>
-    <tr>
-      <td>Glutes/Quads: {{ glutesQuadsVolume }}</td>
-    </tr>
-    <tr>
-      <td>Hamstrings/Calves: {{ hamstringsCalvesVolume }}</td>
-    </tr>
-  </tbody>
-</table>
+<h2 class="text-center">Total Volume Performed for Muscle Group</h2>
+@if (isLoaded) {
+<div class="d-flex justify-content-center">
+  <table class="table-bordered table-striped table-hover mt-3 mb-3">
+    <thead>
+      <tr>
+        <th>Muscle Group</th>
+        <th>Volume Worked</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Chest</td>
+        <td>{{ chestVolume }}</td>
+      </tr>
+      <tr>
+        <td>Back</td>
+        <td>{{ backVolume }}</td>
+      </tr>
+      <tr>
+        <td>Biceps</td>
+        <td>{{ bicepsVolume }}</td>
+      </tr>
+      <tr>
+        <td>Tricpes</td>
+        <td>{{ tricepsVolume }}</td>
+      </tr>
+      <tr>
+        <td>Glutes/Quads</td>
+        <td>{{ glutesQuadsVolume }}</td>
+      </tr>
+      <tr>
+        <td>Hamstrings/Calves</td>
+        <td>{{ hamstringsCalvesVolume }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+}
+@else 
+{
+  <p class="text-center">Loading</p>
+}

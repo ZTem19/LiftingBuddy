@@ -23,18 +23,29 @@ export class VolumeMuscleGroupComponent implements OnChanges {
   glutesQuadsVolume: number = 0;
   hamstringsCalvesVolume: number = 0;
 
+  isLoaded: boolean = true;
+
   constructor(private intervalService: IntervalServiceService) {}
   
   ngOnChanges(): void 
   {
-    // Get volumes for each muscle group to display based on start date and end date from parent
-    this.volumeMuscleGroupMap = this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
+    this.loadData();
+  }
 
-    this.chestVolume = this.volumeMuscleGroupMap.get(MuscleGroup.Chest) ?? 0;
-    this.backVolume = this.volumeMuscleGroupMap.get(MuscleGroup.Back) ?? 0;
-    this.bicepsVolume = this.volumeMuscleGroupMap.get(MuscleGroup.Biceps) ?? 0;
-    this.tricepsVolume = this.volumeMuscleGroupMap.get(MuscleGroup.Triceps) ?? 0;
-    this.glutesQuadsVolume = this.volumeMuscleGroupMap.get(MuscleGroup.GlutesQuads) ?? 0;
-    this.hamstringsCalvesVolume = this.volumeMuscleGroupMap.get(MuscleGroup.HamstringsCalves) ?? 0;
+  async loadData()
+  {
+    this.isLoaded = false;
+    
+    // Get volumes for each muscle group to display based on start date and end date from parent
+    this.volumeMuscleGroupMap = await this.intervalService.GetVolumeMuscleGroup(this.startDate, this.endDate);
+
+    this.chestVolume = this.volumeMuscleGroupMap.get(1) ?? 0;
+    this.backVolume = this.volumeMuscleGroupMap.get(2) ?? 0;
+    this.bicepsVolume = this.volumeMuscleGroupMap.get(3) ?? 0;
+    this.tricepsVolume = this.volumeMuscleGroupMap.get(4) ?? 0;
+    this.glutesQuadsVolume = this.volumeMuscleGroupMap.get(5) ?? 0;
+    this.hamstringsCalvesVolume = this.volumeMuscleGroupMap.get(6) ?? 0;
+
+    this.isLoaded = true;
   }
 }

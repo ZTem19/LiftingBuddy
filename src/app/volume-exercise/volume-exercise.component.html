@@ -1,21 +1,32 @@
-<h1>Total Volume Performed For Exercise Worked</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Exercise</th>
-      <th>Volume</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (entry of volumeExerciseMap.entries(); track entry[0]) {
-    <tr>
-      <td>{{ entry[0].name }}</td>
-      <td>{{ entry[1] }}</td>
-    </tr>
-    }
-    @empty 
-    {
-      <p>Sorry, there are no exercises to show.</p>
-    }
-  </tbody>
-</table>
+<h2 class="text-center">Total Volume Performed For Exercise Worked</h2>
+@if (isLoaded == false)
+{
+  <p class="text-center">Loading</p>
+}
+@else if (volumeExerciseMap.size) {
+<div class="d-flex justify-content-center">
+  <table class="table-bordered table-striped table-hover mt-3 mb-3">
+    <thead>
+      <tr>
+        <th>Exercise</th>
+        <th>Volume</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (entry of volumeExerciseMap.entries(); track entry[0]) {
+      <tr>
+        @if(entry){
+
+        }
+        <td>{{ entry[1].exercise.name}}</td>
+        <td>{{ entry[1].volume }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+} @else {
+<div class="d-flex justify-content-center">
+  <p class="mt-3 mb-3 sorry-message">Sorry, there are no exercises to show.</p>
+</div>
+}

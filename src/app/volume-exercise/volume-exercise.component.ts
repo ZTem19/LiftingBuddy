@@ -12,12 +12,20 @@ export class VolumeExerciseComponent {
   @Input() startDate!: Date;
   @Input() endDate!: Date;
 
-  volumeExerciseMap: Map<Exercise, number> = new Map();
+  volumeExerciseMap: Map<string, { exercise: Exercise, volume: number }>= new Map();
+  isLoaded: boolean = true;
   
   constructor(private intervalService: IntervalServiceService) {}
 
   ngOnChanges(): void 
   {
-    this.volumeExerciseMap = this.intervalService.GetVolumeExercise(this.startDate, this.endDate);
+    this.loadData();
+  }
+
+  async loadData()
+  {
+    this.isLoaded = false;
+    this.volumeExerciseMap = await this.intervalService.GetVolumeExercise(this.startDate, this.endDate);
+    this.isLoaded = true;
   }
 }

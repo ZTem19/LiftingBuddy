@@ -1,39 +1,56 @@
-<h1>Interval Progress</h1>
-<form #dateForm="ngForm" (ngSubmit)="onSubmit(dateForm)">
-  <label for="start-date">Start Date:</label>
-  <input
-    type="date"
-    id="start-date"
-    name="startDate"
-    ngModel
-    required
-  /><br /><br />
+<div class="w-100 min-vh-100 page">
+  <h1 class="text-center">Interval Progress</h1>
+  <div class="container">
+    <form #dateForm="ngForm" (ngSubmit)="onSubmit(dateForm)">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="start-date" class="me-3">Start Date:</label>
+            <input
+              type="date"
+              id="start-date"
+              name="startDate"
+              ngModel
+              required
+            /><br /><br />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="number-days" class="me-3">Number of Days:</label>
+            <input
+              type="number"
+              id="number-days"
+              name="numberDays"
+              ngModel
+              required
+            /><br /><br />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="number-intervals" class="me-3"
+              >Number of Intervals:</label
+            >
+            <input
+              type="number"
+              id="number-intervals"
+              name="numberIntervals"
+              ngModel
+              required
+            /><br /><br />
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 
-  <label for="number-days">Number of Days:</label>
-  <input
-    type="number"
-    id="number-days"
-    name="numberDays"
-    ngModel
-    required
-  /><br /><br />
-
-  <label for="number-intervals">Number of Intervals:</label>
-  <input
-    type="number"
-    id="number-intervals"
-    name="numberIntervals"
-    ngModel
-    required
-  /><br /><br />
-
-  <button type="submit">Submit</button>
-</form>
-
-@if (this.showProgress) {
-<app-interval-progress-table
-  [startDate]="startDate"
-  [numDays]="numberOfDays"
-  [numIntervals]="numberOfIntervals"
-></app-interval-progress-table>
-}
+    @if (this.showProgress) {
+    <app-interval-progress-table
+      [startDate]="startDate"
+      [numDays]="numberOfDays"
+      [numIntervals]="numberOfIntervals"
+    ></app-interval-progress-table>
+    }
+  </div>
+</div>

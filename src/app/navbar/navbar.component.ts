@@ -31,11 +31,12 @@ export class NavbarComponent implements OnInit {
   //First string the display of the navbar and the second is the path for routerlink
   links: [string, string][] = [
     ['Home', ''],
-    ['Interval Stat', '/interval-stats'],
     ['Pages', 'pages'],
     ['Here', 'here'],
     ['Like', 'like'],
     ['Calendar Test', 'calendar'],
     ['Settings', 'settings'],
+    ['Interval Stats', 'interval-stats'],
+    ['Interval Progress', 'interval-progress']
   ];
 }

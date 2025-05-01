@@ -9,94 +9,63 @@ import { MuscleGroup, Exercise, Set as DataSet, ExerciseSet, MuscleGroupProgress
 export class IntervalServiceService {
 
   constructor(private dataService: DataService) { }
+
+  // Gets map with muscle group and its total volume in interval
+  public async GetVolumeMuscleGroup(startDate: Date, endDate: Date): Promise<Map<number, number>> {
+    let muscleGroupVolumes: Map<number, number> = new Map([
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [5, 0],
+      [6, 0]
+    ]);
   
-  // Returns total volume for each muscle group in the interval
-  public GetVolumeMuscleGroup(startDate: Date, endDate: Date): Map<MuscleGroup, number> {
-    console.log("Inside of GetVolumeMuscleGroup")
-    
-    // map of muscle groups to their volumes which will be returned
-    let muscleGroupVolumes: Map<MuscleGroup, number> = new Map();
-
-    // set the volume of each muscle group for this interval to 0 by default
-    muscleGroupVolumes.set(MuscleGroup.Chest, 0)
-    muscleGroupVolumes.set(MuscleGroup.Back, 0)
-    muscleGroupVolumes.set(MuscleGroup.Biceps, 0)
-    muscleGroupVolumes.set(MuscleGroup.Triceps, 0)
-    muscleGroupVolumes.set(MuscleGroup.GlutesQuads, 0)
-    muscleGroupVolumes.set(MuscleGroup.HamstringsCalves, 0)
-
-    if(this.dataService.dataMap)
-    {
-      // Iterate over all days in the interval
-      this.dataService.dataMap.forEach((exerciseSets: ExerciseSet[], date: Date)  => {           
-        if (!exerciseSets) {
-          console.log(`No exercise sets found for date ${date}`);
-          return;
-        }
-        
-        if (date >= startDate && date <= endDate) {
-          // Iterate over the exercise sets for each day
-          for (const exerciseSet of exerciseSets) {
-            // Based on the muscle group, accumulate the total volume for that muscle group
-            switch (exerciseSet.exercise.muscleGroupWorked) {
-              case MuscleGroup.Chest:
-                muscleGroupVolumes.set(MuscleGroup.Chest, muscleGroupVolumes.get(MuscleGroup.Chest)! + exerciseSet.totalVolume);
-                break;
-              case MuscleGroup.Back:
-                muscleGroupVolumes.set(MuscleGroup.Back, muscleGroupVolumes.get(MuscleGroup.Back)! + exerciseSet.totalVolume);
-                break;
-              case MuscleGroup.Biceps:
-                muscleGroupVolumes.set(MuscleGroup.Biceps, muscleGroupVolumes.get(MuscleGroup.Biceps)! + exerciseSet.totalVolume);
-                break;
-              case MuscleGroup.Triceps:
-                muscleGroupVolumes.set(MuscleGroup.Triceps, muscleGroupVolumes.get(MuscleGroup.Triceps)! + exerciseSet.totalVolume);
-                break;
-              case MuscleGroup.GlutesQuads:
-                muscleGroupVolumes.set(MuscleGroup.GlutesQuads, muscleGroupVolumes.get(MuscleGroup.GlutesQuads)! + exerciseSet.totalVolume);
-                break;
-              case MuscleGroup.HamstringsCalves:
-                muscleGroupVolumes.set(MuscleGroup.HamstringsCalves, muscleGroupVolumes.get(MuscleGroup.HamstringsCalves)! + exerciseSet.totalVolume);
-                break;
-            }
-          }
-        }
-      });
+    // Loop from startDate to endDate
+    for (let current = new Date(startDate); current <= endDate; current = addDays(current, 1)) {
+      const exerciseSets = await this.dataService.getExerciseSetsForDay("3k7dINFrSssLj0qq8TqF", current);
+      
+      if (!exerciseSets) continue;
+  
+      for (const exerciseSet of exerciseSets) {
+        const group = exerciseSet.exercise.muscleGroup;
+        console.log("Exercise object:", exerciseSet.exercise);
+        const currentVolume = muscleGroupVolumes.get(group) || 0;
+        muscleGroupVolumes.set(group, currentVolume + exerciseSet.totalVolume);
+      }
     }
-    else 
-    {
-      console.error("dataMap is undefined or null");
-    }
-
-    // Return an array of total volumes for each muscle group
+  
     return muscleGroupVolumes;
   }
 
-  // Returns total volume for each exercise worked in the interval
-  GetVolumeExercise(startDate: Date, endDate: Date): Map<Exercise, number> {
-    // Map to associate an exercise with a total volume for this interval
-    let exerciseVolumes: Map<Exercise, number> = new Map();
-
-    // Iterate over all days in the interval
-    this.dataService.dataMap.forEach((exerciseSets: ExerciseSet[], date: Date)  => {   
-      if (date >= startDate && date <= endDate) {
-        if (!exerciseSets) {
-          console.warn(`No exercise sets found for date ${date}`);
-          return;
-        }
-
-        // Iterate over the exercise sets for each day
-        for (const exerciseSet of exerciseSets) {
-          const currentVolume = exerciseVolumes.get(exerciseSet.exercise) || 0;
-          exerciseVolumes.set(exerciseSet.exercise, currentVolume + exerciseSet.totalVolume);
+  // Gets map with all exercises worked in interval and their volumes
+  public async GetVolumeExercise(startDate: Date, endDate: Date): Promise<Map<string, { exercise: Exercise, volume: number }>> {
+    const exerciseVolumes = new Map<string, { exercise: Exercise, volume: number }>();
+  
+    for (let current = new Date(startDate); current <= endDate; current = addDays(current, 1)) {
+      const exerciseSets = await this.dataService.getExerciseSetsForDay("3k7dINFrSssLj0qq8TqF", current);
+      if (!exerciseSets) continue;
+  
+      for (const exerciseSet of exerciseSets) {
+        const id = exerciseSet.exercise.id;
+        const entry = exerciseVolumes.get(id);
+  
+        if (entry) {
+          entry.volume += exerciseSet.totalVolume;
+        } else {
+          exerciseVolumes.set(id, {
+            exercise: exerciseSet.exercise,
+            volume: exerciseSet.totalVolume
+          });
         }
       }
-    });
-
+    }
+  
     return exerciseVolumes;
   }
 
   // Returns volume in first interval, last interval, max interval, and min interval for each muscle group over multiple intervals
-  GetIntervalProgress(startDate: Date, numberOfDaysPerInterval: number, numberOfIntervals: number): Map<MuscleGroup, MuscleGroupProgress>
+  async GetIntervalProgress(startDate: Date, numberOfDaysPerInterval: number, numberOfIntervals: number): Promise<Map<MuscleGroup, MuscleGroupProgress>>
   {
     // Init progress objects
     let chestProgress: MuscleGroupProgress = {volumeFirstInterval: 0, volumeLastInterval: 0, volumeMax: 0, volumeMin: 0};
@@ -115,10 +84,8 @@ export class IntervalServiceService {
       let intervalEndDate: Date = addDays(intervalStartDate, numberOfDaysPerInterval - 1);
       
       // get volume for each muscle group in this interval
-      let currentIntervalMap = this.GetVolumeMuscleGroup(intervalStartDate, intervalEndDate);
-      console.log(intervalStartDate)
-      console.log(intervalEndDate)
-
+      let currentIntervalMap = await this.GetVolumeMuscleGroup(intervalStartDate, intervalEndDate);
+      
       // init every volume if first interval
       if (i == 0)
       {
