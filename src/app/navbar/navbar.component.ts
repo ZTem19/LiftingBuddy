@@ -37,12 +37,8 @@ export class NavbarComponent implements OnInit {
   links: [string, string][] = [
     ['Home', ''],
     ['Day', 'day'],
-    ['Interval Stat', '/interval-stats'],
-    ['Here', 'here'],
-    ['Like', 'like'],
-    ['Calendar Test', 'calendar'],
-    ['Settings', 'settings'],
-    ['Interval Stats', 'interval-stats'],
+    ['Interval Stats', '/interval-stats'],
     ['Interval Progress', 'interval-progress'],
+    ['Settings', 'settings'],
   ];
 }

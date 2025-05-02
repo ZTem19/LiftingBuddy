@@ -12,10 +12,11 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-<<<<<<<< HEAD:src/app/user-authentication.service.ts
 export class UserAuthenticationService {
   firestore: Firestore = inject(Firestore);
   private userCollection = collection(this.firestore, 'users');
+
+  readonly user?: User;
 
   ngOnInit(): void {}
 
@@ -31,10 +32,4 @@ export class UserAuthenticationService {
 
     setDoc(userReference, user);
   }
-========
-export class FetchServiceService implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
->>>>>>>> 888055420350c8b0aba58c23d17bf9bd134e9caa:src/app/fetch-service.service.ts
 }

@@ -19,12 +19,6 @@ export const routes: Routes = [
     path: 'interval-progress',
     component: IntervalProgressComponent,
   },
-  //This is a test route for the calendar
-  //todo remove
-  {
-    path: 'calendar',
-    component: CalendarComponent,
-  },
   {
     path: 'day',
     component: DayPageComponent,

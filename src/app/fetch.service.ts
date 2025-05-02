@@ -12,6 +12,8 @@ import {
   doc,
   deleteDoc,
   Timestamp,
+  QuerySnapshot,
+  QueryDocumentSnapshot,
 } from '@angular/fire/firestore';
 import { Observable, of, combineLatest } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
@@ -35,18 +37,13 @@ export class FetchService implements OnInit {
 
   ngOnInit(): void {}
 
-  getUsers(): Observable<User[]> {
-    return collectionData(this.userCollection, { idField: 'id' }) as Observable<
-      User[]
-    >;
-  }
-
   // Get an array of exercises with their sets for a single day and user
   async getExerciseSetDataForDay(
     userId: string,
     day: Date
   ): Promise<ExerciseSet[]> {
     // query to get data documents for the given user and day
+
     const startOfDay = new Date(day);
     startOfDay.setHours(0, 0, 0, 0);
 
@@ -105,6 +102,7 @@ export class FetchService implements OnInit {
         exerciseSets.push(exerciseSet);
       }
       // return the array
+
       return exerciseSets;
     } catch (error) {
       throw error;
@@ -327,5 +325,70 @@ export class FetchService implements OnInit {
       const currentDate = addDays(startDate, i);
       await this.addThreeExerciseSets(userId, currentDate);
     }
+  }
+
+  async getMuscleGroupsInDateRange(
+    userid: string,
+    startDate: Date,
+    endDate: Date
+  ): Observable<Map<string, ExerciseSet[]>> {
+    const map = new Map<string, ExerciseSet[]>();
+
+    const exerciseSets: ExerciseSet[] = [];
+
+    const q = query(
+      this.dataCollection,
+      where('userId', '==', userid),
+      where('date', '>=', Timestamp.fromDate(startDate)),
+      where('date', '<=', Timestamp.fromDate(endDate))
+    );
+
+    let snapshot: QuerySnapshot = await getDocs(q);
+    if (snapshot == null || snapshot.empty) {
+      console.error('Data returned by query is null or none');
+    }
+    for (let doc of snapshot.docs) {
+      let docData = doc.data();
+      const exerciseId = docData['exerciseId'];
+      const totalVolume = docData['totalVolume'];
+
+      // Fetch the exercise based on exerciseId
+      const exerciseTask = this.getExerciseById(exerciseId);
+
+      // Query to get sets associated with the data document
+      const setsQuery = query(
+        this.setsCollection,
+        where('dataId', '==', doc.id)
+      );
+
+      const setsTask = getDocs(setsQuery);
+
+      const exercise = await exerciseTask;
+      const setsSnap = await setsTask;
+
+      const sets: Set[] = setsSnap.docs.map(
+        (setDoc: any) => setDoc.data() as Set
+      );
+
+      // Construct the ExerciseSet object
+      const exerciseSet: ExerciseSet = {
+        exercise: exercise,
+        sets: sets,
+        totalVolume: totalVolume,
+      };
+      // add it to array
+      exerciseSets.push(exerciseSet);
+    }
+  }
+
+  // this.dataCollection,
+  // where('userId', '==', userId),
+  // where('date', '>=', Timestamp.fromDate(startOfDay)),
+  // where('date', '<=', Timestamp.fromDate(endOfDay))
+
+  getUsers(): Observable<User[]> {
+    return collectionData(this.userCollection, { idField: 'id' }) as Observable<
+      User[]
+    >;
   }
 }
