@@ -29,10 +29,6 @@ export const routes: Routes = [
     path: 'day',
     component: DayPageComponent,
   },
-  {
-    path: 'day',
-    component: DayPageComponent,
-  },
   { path: 'exercise-progress-page', component: ExerciseProgressPageComponent },
 
   {
