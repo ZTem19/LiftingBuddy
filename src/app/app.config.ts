@@ -7,7 +7,7 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore} from '@angular/fire/firestore';
 
 //Fire base setup
-import { firebaseConfig} from '../../firebaseapi';
+import { firebaseConfig} from '../firebaseapi';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -37,6 +37,8 @@ export class NavbarComponent implements OnInit {
     ['Calendar Test', 'calendar'],
     ['Settings', 'settings'],
     ['Interval Stats', 'interval-stats'],
-    ['Interval Progress', 'interval-progress']
+    ['Interval Progress', 'interval-progress'],
+    ['Exercise Progress', 'exercise-progress-page'],
+    ['Muscle Group Progress', 'muscle-group-progress-page'],
   ];
 }
