@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, OnInit } from '@angular/core';
 import {
   MuscleGroup,
   Exercise,
-  Set as DataSet,
+  eSet as DataSet,
   ExerciseSet,
 } from '../data types/data-types';
 import { of, Observable, forkJoin, mapTo } from 'rxjs';
@@ -13,11 +13,25 @@ import * as exercises from '../exercises.json';
 @Injectable({
   providedIn: 'root',
 })
-export class DataService {
+export class DataService implements OnInit {
   private dataMap: Map<String, ExerciseSet[]> = new Map();
+  private userId: string = '3k7dINFrSssLj0qq8TqF';
+  private fetchService: FetchService = inject(FetchService);
 
-  constructor(private fetchService: FetchService) {
-    this.preloadMonthSets('3k7dINFrSssLj0qq8TqF', 2025, 1);
+  constructor() {}
+
+  ngOnInit(): void {
+    // this.preloadMonthSets('3k7dINFrSssLj0qq8TqF', 2025, 1);
+
+    // Get workout history for the last 3 months
+    const currentDate = new Date();
+    const past = new Date();
+    past.setDate(currentDate.getDate() - 90);
+    this.fetchService.getExerciseSetsInDateRange(
+      this.userId,
+      past,
+      currentDate
+    );
   }
 
   async getExerciseSetsForDay(

@@ -18,10 +18,11 @@ import {
 import { Observable, of, combineLatest } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { Exercise, ExerciseSet, User } from '../data types/data-types';
-import { Set } from '../data types/data-types';
+import { eSet } from '../data types/data-types';
 import { addDays } from '../utils/utils';
 import exerciseData from '../exercises.json';
 import { getEffortFactor } from '../utils/utils';
+import { documentId } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -88,8 +89,8 @@ export class FetchService implements OnInit {
           where('dataId', '==', dataDoc.id)
         );
         const setsSnapshot = await getDocs(setsQuery);
-        const sets: Set[] = setsSnapshot.docs.map(
-          (setDoc: any) => setDoc.data() as Set
+        const sets: eSet[] = setsSnapshot.docs.map(
+          (setDoc: any) => setDoc.data() as eSet
         );
 
         // Construct the ExerciseSet object
@@ -132,7 +133,7 @@ export class FetchService implements OnInit {
     userId: string,
     day: Date,
     exerciseId: string,
-    sets: Set[]
+    sets: eSet[]
   ): Promise<string[]> {
     // transaction ensures if one thing fails nothing is committed
     return await runTransaction(this.firestore, async (transaction: any) => {
@@ -289,7 +290,7 @@ export class FetchService implements OnInit {
 
         // Determine a random number of sets (between 2 and 4)
         const numberOfSets = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4 sets
-        const sets: Set[] = [];
+        const sets: eSet[] = [];
         for (let j = 0; j < numberOfSets; j++) {
           // Generate random reps and weight
           const numOfReps = Math.floor(Math.random() * 7) + 6; // Between 6 and 12 reps
@@ -331,10 +332,8 @@ export class FetchService implements OnInit {
     userid: string,
     startDate: Date,
     endDate: Date
-  ): Observable<Map<string, ExerciseSet[]>> {
+  ): Promise<Map<string, ExerciseSet[]>> {
     const map = new Map<string, ExerciseSet[]>();
-
-    const exerciseSets: ExerciseSet[] = [];
 
     const q = query(
       this.dataCollection,
@@ -366,8 +365,8 @@ export class FetchService implements OnInit {
       const exercise = await exerciseTask;
       const setsSnap = await setsTask;
 
-      const sets: Set[] = setsSnap.docs.map(
-        (setDoc: any) => setDoc.data() as Set
+      const sets: eSet[] = setsSnap.docs.map(
+        (setDoc: any) => setDoc.data() as eSet
       );
 
       // Construct the ExerciseSet object
@@ -376,9 +375,25 @@ export class FetchService implements OnInit {
         sets: sets,
         totalVolume: totalVolume,
       };
-      // add it to array
-      exerciseSets.push(exerciseSet);
+
+      const date = new Date(docData['date']);
+      const dateString = date.toISOString().split('T')[0];
+
+      console.log(dateString);
+
+      if (map.has(dateString)) {
+        const exerciseSets = map.get(dateString);
+        exerciseSets?.push(exerciseSet);
+      } else {
+        map.set(dateString, [exerciseSet]);
+      }
     }
+    console.log(
+      'Got user data from: ' + startDate.toISOString() + '\n To: ' + endDate
+    );
+    console.log('Data: ');
+    this.printMap(map);
+    return map;
   }
 
   // this.dataCollection,
@@ -386,9 +401,99 @@ export class FetchService implements OnInit {
   // where('date', '>=', Timestamp.fromDate(startOfDay)),
   // where('date', '<=', Timestamp.fromDate(endOfDay))
 
+  async getExerciseSetsInDateRange(
+    userId: string,
+    startDate: Date,
+    endDate: Date
+  ) {
+    const map = new Map<string, ExerciseSet[]>();
+
+    console.log(
+      'Geting data from : ' +
+        startDate.toISOString() +
+        '\nTo :' +
+        endDate.toISOString()
+    );
+
+    const q = query(
+      this.dataCollection,
+      where('userId', '==', userId),
+      where('date', '>=', Timestamp.fromDate(startDate)),
+      where('date', '<=', Timestamp.fromDate(endDate))
+    );
+
+    let snapshot: QuerySnapshot = await getDocs(q);
+
+    // query all docs at then map them back and construct them
+    const execrisesRef = new Map<string, string[]>();
+    const setRef = new Map<string, string[]>();
+
+    let exerciseId;
+    let totalVolume;
+    let date;
+    for (const doc of snapshot.docs) {
+      let docData = doc.data();
+      date = new Date(docData['date']['seconds'] * 1000);
+      exerciseId = docData['exerciseId'];
+      totalVolume = docData['totalVolume'];
+
+      if (!execrisesRef.has(exerciseId)) {
+        execrisesRef.set(exerciseId, []);
+      }
+      execrisesRef.get(exerciseId)?.push(doc.id);
+    }
+
+    //const execeriseQuery = query(this.exerciseCollection);
+
+    const uniqueExeceriseIds = this.getUnqiueValues(execrisesRef);
+    const exerciseTasks = [];
+
+    const maxSize = 10;
+    let currentIds = [];
+    for (const string of uniqueExeceriseIds) {
+      if (currentIds.length < 10) {
+        currentIds.push(string);
+      } else {
+        console.log('Making query with array: ' + currentIds.toString());
+        exerciseTasks.push(
+          query(this.exerciseCollection, where(documentId(), 'in', currentIds))
+        );
+        currentIds = [];
+      }
+    }
+
+    // const setsQuery = qeury(this.setsCollection);
+
+    const setsTasks = [];
+
+    // execrisesRef.forEach((key, val) => {
+    //   exercisesTasks.push();
+    // });
+  }
+
   getUsers(): Observable<User[]> {
     return collectionData(this.userCollection, { idField: 'id' }) as Observable<
       User[]
     >;
+  }
+
+  private printMap(map: Map<any, any>) {
+    const obj = Object.fromEntries(map);
+    console.log(JSON.stringify(obj, null, 2));
+  }
+
+  //Gets all the unique strings values of the maps values
+  private getUnqiueValues(map: Map<string, string[]>): Set<string> {
+    const uniqueVals = new Set<string>();
+    for (const key of map.keys()) {
+      const strings = map.get(key);
+      if (strings == null) {
+        continue;
+      }
+      for (let string of strings) {
+        uniqueVals.add(string);
+      }
+    }
+    return uniqueVals;
   }
 }
