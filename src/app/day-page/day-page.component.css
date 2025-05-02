@@ -1,8 +1,13 @@
 .page {
   padding: 2em;
   background-color: #1b1a55;
+  min-height: fit-content;
 }
 
 .page > p {
+  color: #f0f0f0;
+}
+
+.exercisetable * {
   color: #f0f0f0;
 }

@@ -16,7 +16,7 @@ import {
   QueryDocumentSnapshot,
 } from '@angular/fire/firestore';
 import { Observable, of, combineLatest } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, max } from 'rxjs/operators';
 import { Exercise, ExerciseSet, User } from '../data types/data-types';
 import { eSet } from '../data types/data-types';
 import { addDays } from '../utils/utils';
@@ -36,7 +36,11 @@ export class FetchService implements OnInit {
   private dataCollection = collection(this.firestore, 'data');
   private setsCollection = collection(this.firestore, 'sets');
 
-  ngOnInit(): void {}
+  exerciseList?: Observable<Exercise[]>;
+
+  ngOnInit(): void {
+    this.exerciseList = this.getAllExercises();
+  }
 
   // Get an array of exercises with their sets for a single day and user
   async getExerciseSetDataForDay(
@@ -408,6 +412,9 @@ export class FetchService implements OnInit {
   ) {
     const map = new Map<string, ExerciseSet[]>();
 
+    // start query for exercises
+    const exerciseListTask = getDocs(this.exerciseCollection);
+
     console.log(
       'Geting data from : ' +
         startDate.toISOString() +
@@ -415,60 +422,74 @@ export class FetchService implements OnInit {
         endDate.toISOString()
     );
 
-    const q = query(
+    const dataQuery = query(
       this.dataCollection,
       where('userId', '==', userId),
       where('date', '>=', Timestamp.fromDate(startDate)),
       where('date', '<=', Timestamp.fromDate(endDate))
     );
 
-    let snapshot: QuerySnapshot = await getDocs(q);
+    let dataSnapshot: QuerySnapshot = await getDocs(dataQuery);
 
     // query all docs at then map them back and construct them
-    const execrisesRef = new Map<string, string[]>();
-    const setRef = new Map<string, string[]>();
+    const ids = [];
 
     let exerciseId;
     let totalVolume;
     let date;
-    for (const doc of snapshot.docs) {
+    for (const doc of dataSnapshot.docs) {
       let docData = doc.data();
       date = new Date(docData['date']['seconds'] * 1000);
+      let dateString = date.toISOString().split('T')[0];
       exerciseId = docData['exerciseId'];
       totalVolume = docData['totalVolume'];
 
-      if (!execrisesRef.has(exerciseId)) {
-        execrisesRef.set(exerciseId, []);
-      }
-      execrisesRef.get(exerciseId)?.push(doc.id);
+      ids.push(doc.id);
     }
 
-    //const execeriseQuery = query(this.exerciseCollection);
+    const maxQuerySize = 30;
 
-    const uniqueExeceriseIds = this.getUnqiueValues(execrisesRef);
-    const exerciseTasks = [];
-
-    const maxSize = 10;
-    let currentIds = [];
-    for (const string of uniqueExeceriseIds) {
-      if (currentIds.length < 10) {
-        currentIds.push(string);
-      } else {
-        console.log('Making query with array: ' + currentIds.toString());
-        exerciseTasks.push(
-          query(this.exerciseCollection, where(documentId(), 'in', currentIds))
-        );
-        currentIds = [];
-      }
-    }
-
-    // const setsQuery = qeury(this.setsCollection);
-
+    // Query sets that reference data by id
     const setsTasks = [];
+    let currentSetIds = [];
+    for (let i = 0; i < ids.length; i++) {
+      let string = ids[i];
+      currentSetIds.push(string);
+      if (currentSetIds.length == maxQuerySize || i == ids.length - 1) {
+        console.log(
+          'Making query to sets with array: ' +
+            currentSetIds.toString() +
+            '\nLength: ' +
+            currentSetIds.length
+        );
+        setsTasks.push(
+          getDocs(
+            query(this.setsCollection, where('dataId', 'in', currentSetIds))
+          )
+        );
+        currentSetIds = [];
+      }
+    }
 
-    // execrisesRef.forEach((key, val) => {
-    //   exercisesTasks.push();
-    // });
+    // Aggregate sets together
+    const allSets: eSet[] = [];
+    for (const task of setsTasks) {
+      const setsSnap = await task;
+      const sets: eSet[] = setsSnap.docs.map((setDoc) => setDoc.data() as eSet);
+      sets.forEach((set) => allSets.push(set));
+    }
+
+    const exercises: Exercise[] = (await exerciseListTask).docs.map(
+      (exerciseDoc) => exerciseDoc.data() as Exercise
+    );
+
+    //have all exercises in [], sets in []
+  }
+
+  getAllExercises(): Observable<Exercise[]> {
+    return collectionData(this.exerciseCollection, {
+      idField: 'id',
+    }) as Observable<Exercise[]>;
   }
 
   getUsers(): Observable<User[]> {
@@ -480,20 +501,5 @@ export class FetchService implements OnInit {
   private printMap(map: Map<any, any>) {
     const obj = Object.fromEntries(map);
     console.log(JSON.stringify(obj, null, 2));
-  }
-
-  //Gets all the unique strings values of the maps values
-  private getUnqiueValues(map: Map<string, string[]>): Set<string> {
-    const uniqueVals = new Set<string>();
-    for (const key of map.keys()) {
-      const strings = map.get(key);
-      if (strings == null) {
-        continue;
-      }
-      for (let string of strings) {
-        uniqueVals.add(string);
-      }
-    }
-    return uniqueVals;
   }
 }

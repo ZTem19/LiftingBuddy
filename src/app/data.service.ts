@@ -24,6 +24,7 @@ export class DataService implements OnInit {
     // this.preloadMonthSets('3k7dINFrSssLj0qq8TqF', 2025, 1);
 
     // Get workout history for the last 3 months
+    console.log('Init data service');
     const currentDate = new Date();
     const past = new Date();
     past.setDate(currentDate.getDate() - 90);
@@ -109,7 +110,11 @@ export class DataService implements OnInit {
     return map;
   }
 
-  getDateString(date: Date): string {
+  getAllExercises(): Observable<Exercise[]> {
+    return this.fetchService.getAllExercises();
+  }
+
+  private getDateString(date: Date): string {
     return date.toISOString().split('T')[0];
   }
 }

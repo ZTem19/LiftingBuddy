@@ -1,4 +1,27 @@
-<div class="page h-100 w-100">
-  <p>Today's Date: {{ today | date : "mediumDate" }}</p>
-  <app-calendar></app-calendar>
+<div class="page w-100">
+  <div>
+    <p>Today's Date: {{ today | date : "mediumDate" }}</p>
+    <app-calendar></app-calendar>
+  </div>
+  <div class="exercisetable">
+    <table>
+      <thead>
+        <th>Exercise Name</th>
+        <th>Muscle Group</th>
+        <th>Decription</th>
+      </thead>
+      <tr>
+        <td>bench press</td>
+        <td>Chest</td>
+        <td>push the bar</td>
+      </tr>
+      @for(exercise of exerciseList; track exercise){
+      <tr>
+        <td>{{ exercise.name }}</td>
+        <td>{{ getNameOfMuscleGroup(exercise.muscleGroup) }}</td>
+        <td>{{ exercise.description }}</td>
+      </tr>
+      }
+    </table>
+  </div>
 </div>

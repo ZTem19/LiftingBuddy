@@ -3,6 +3,8 @@ import { CalendarComponent } from '../calendar/calendar.component';
 import { DatePipe } from '@angular/common';
 import { DatasetController } from 'chart.js';
 import { DataService } from '../data.service';
+import { Exercise } from '../../data types/data-types';
+import { MuscleGroup } from '../../data types/data-types';
 
 @Component({
   selector: 'app-day-page',
@@ -14,9 +16,16 @@ export class DayPageComponent implements OnInit {
   today: Date = new Date();
   dayOfWeek: number = this.today.getDay();
   dataService: DataService = inject(DataService);
+  exerciseList?: Exercise[];
 
   ngOnInit(): void {
-    console.log(this.today.toISOString());
     this.dataService.ngOnInit();
+    this.dataService
+      .getAllExercises()
+      .subscribe((exercises) => (this.exerciseList = exercises));
+  }
+
+  getNameOfMuscleGroup(num: number): string {
+    return MuscleGroup[num];
   }
 }
