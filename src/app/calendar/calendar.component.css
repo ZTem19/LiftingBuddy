@@ -36,4 +36,13 @@
   color: #f0f0f0;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+
+.daycell:hover {
+  scale: 110%;
+}
+
+.selected {
+  color: #59bbfd;
 }

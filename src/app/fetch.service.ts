@@ -24,7 +24,7 @@ import { getEffortFactor } from '../utils/utils';
 @Injectable({
   providedIn: 'root',
 })
-export class FetchServiceService implements OnInit {
+export class FetchService implements OnInit {
   constructor() {}
 
   firestore: Firestore = inject(Firestore);

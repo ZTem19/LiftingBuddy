@@ -8,6 +8,12 @@
   <p class="dayheader">Sat</p>
 
   @for (day of calendarDates; track $index) {
-  <p class="daycell">{{ day.getDate() }}</p>
+  <p
+    class="daycell"
+    (click)="setSelectedDay(day)"
+    [class.selected]="isSelectedDate(day)"
+  >
+    {{ day.getDate() }}
+  </p>
   }
 </div>

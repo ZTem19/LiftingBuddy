@@ -56,4 +56,29 @@ export class DataService {
       this.getExerciseSetsForDay(userId, day)
     ));
   }
+
+  getMuscleGroupForRange(
+    startDate: Date,
+    endDate: Date
+  ): Map<Date, MuscleGroup> {
+    if (!this.dataMap.has(startDate) || !this.dataMap.has(endDate)) {
+      //Check to see if data is cached
+      //fetch service get data for date range
+    }
+    let map = new Map<Date, MuscleGroup>();
+    while (startDate.getTime() < endDate.getTime()) {
+      let group: number = 0;
+      this.dataMap.get(startDate)?.forEach((set) => {
+        if (set == null) {
+          console.log('No set for :' + startDate.toString());
+        } else {
+          group = set.exercise.muscleGroupWorked;
+        }
+      });
+      map.set(startDate, group);
+      startDate.setDate(startDate.getDate() + 1);
+    }
+
+    return map;
+  }
 }
