@@ -299,7 +299,7 @@ export class FetchService implements OnInit {
           // Generate random reps and weight
           const numOfReps = Math.floor(Math.random() * 7) + 6; // Between 6 and 12 reps
           const weight = Math.floor(Math.random() * 81) + 70; // Between 70 and 150 pounds
-          sets.push({ numOfReps, weight });
+          sets.push({ dataId: '', numOfReps, weight });
         }
 
         // Add the exercise sets
@@ -409,8 +409,9 @@ export class FetchService implements OnInit {
     userId: string,
     startDate: Date,
     endDate: Date
-  ) {
-    const map = new Map<string, ExerciseSet[]>();
+  ): Promise<Map<string, ExerciseSet[]>> {
+    // Map of data document id and the exercise id
+    const docDataArray: DocData[] = [];
 
     // start query for exercises
     const exerciseListTask = getDocs(this.exerciseCollection);
@@ -431,6 +432,8 @@ export class FetchService implements OnInit {
 
     let dataSnapshot: QuerySnapshot = await getDocs(dataQuery);
 
+    console.log('Got: ' + dataSnapshot.docs.length + ' data documents');
+
     // query all docs at then map them back and construct them
     const ids = [];
 
@@ -445,9 +448,15 @@ export class FetchService implements OnInit {
       totalVolume = docData['totalVolume'];
 
       ids.push(doc.id);
+      docDataArray.push({
+        id: doc.id,
+        date: dateString,
+        totalVolume: totalVolume,
+        exersiceId: exerciseId,
+      });
     }
 
-    const maxQuerySize = 30;
+    const maxQuerySize = 10;
 
     // Query sets that reference data by id
     const setsTasks = [];
@@ -456,12 +465,12 @@ export class FetchService implements OnInit {
       let string = ids[i];
       currentSetIds.push(string);
       if (currentSetIds.length == maxQuerySize || i == ids.length - 1) {
-        console.log(
-          'Making query to sets with array: ' +
-            currentSetIds.toString() +
-            '\nLength: ' +
-            currentSetIds.length
-        );
+        // console.log(
+        //   'Making query to sets with array: ' +
+        //     currentSetIds.toString() +
+        //     '\nLength: ' +
+        //     currentSetIds.length
+        // );
         setsTasks.push(
           getDocs(
             query(this.setsCollection, where('dataId', 'in', currentSetIds))
@@ -480,10 +489,50 @@ export class FetchService implements OnInit {
     }
 
     const exercises: Exercise[] = (await exerciseListTask).docs.map(
-      (exerciseDoc) => exerciseDoc.data() as Exercise
+      (exerciseDoc) => {
+        const data = exerciseDoc.data() as Exercise;
+        data.id = exerciseDoc.id;
+        return data;
+      }
     );
 
-    //have all exercises in [], sets in []
+    exercises.forEach((e) => console.log(JSON.stringify(e)));
+
+    // Now that all the data is avaibleable constructj the final map
+    const exerciseSetMap = new Map<string, ExerciseSet[]>();
+    for (let doc of docDataArray) {
+      // Get exercise for doc
+      let finalExercise: Exercise | undefined;
+      for (let exercise of exercises) {
+        if (exercise.id == doc.exersiceId) {
+          finalExercise = exercise;
+        }
+      }
+
+      let finalSets: eSet[] = [];
+      for (let set of allSets) {
+        if (set.dataId == doc.id) {
+          finalSets.push(set);
+        }
+      }
+
+      if (!exerciseSetMap.has(doc.date)) {
+        exerciseSetMap.set(doc.date, []);
+      }
+
+      if (finalExercise != null) {
+        exerciseSetMap.get(doc.date)?.push({
+          totalVolume: doc.totalVolume,
+          exercise: finalExercise,
+          sets: finalSets,
+        });
+      } else {
+        console.error('No Exercise for :' + doc.date);
+      }
+    }
+    console.log('returning map: ');
+    this.printMap(exerciseSetMap);
+    return exerciseSetMap;
   }
 
   getAllExercises(): Observable<Exercise[]> {
@@ -502,4 +551,11 @@ export class FetchService implements OnInit {
     const obj = Object.fromEntries(map);
     console.log(JSON.stringify(obj, null, 2));
   }
+}
+
+interface DocData {
+  id: string;
+  date: string;
+  totalVolume: number;
+  exersiceId: string;
 }

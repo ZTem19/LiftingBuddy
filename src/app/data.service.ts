@@ -14,7 +14,7 @@ import * as exercises from '../exercises.json';
   providedIn: 'root',
 })
 export class DataService implements OnInit {
-  private dataMap: Map<String, ExerciseSet[]> = new Map();
+  private dataMap: Map<string, ExerciseSet[]> = new Map();
   private userId: string = '3k7dINFrSssLj0qq8TqF';
   private fetchService: FetchService = inject(FetchService);
 
@@ -28,11 +28,7 @@ export class DataService implements OnInit {
     const currentDate = new Date();
     const past = new Date();
     past.setDate(currentDate.getDate() - 90);
-    this.fetchService.getExerciseSetsInDateRange(
-      this.userId,
-      past,
-      currentDate
-    );
+    this.populateDateMap(this.userId, past, currentDate);
   }
 
   async getExerciseSetsForDay(
@@ -110,8 +106,33 @@ export class DataService implements OnInit {
     return map;
   }
 
+  async getDataInDateRange(
+    startDate: Date,
+    endDate: Date
+  ): Promise<Map<string, ExerciseSet[]>> {
+    if (
+      !this.dataMap.has(this.getDateString(startDate)) ||
+      !this.dataMap.has(this.getDateString(endDate))
+    ) {
+      await this.populateDateMap(this.userId, startDate, endDate);
+    }
+    return this.dataMap;
+  }
+
   getAllExercises(): Observable<Exercise[]> {
     return this.fetchService.getAllExercises();
+  }
+
+  private async populateDateMap(
+    userId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<void> {
+    this.dataMap = await this.fetchService.getExerciseSetsInDateRange(
+      userId,
+      startDate,
+      endDate
+    );
   }
 
   private getDateString(date: Date): string {
