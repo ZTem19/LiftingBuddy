@@ -1,1 +1,12 @@
-<p>Settings Work!</p>
+<!-- src/app/settings/settings.page.html -->
+<div class="settings-container">
+    <h2>Settings</h2>
+    
+    <div *ngIf="user">
+      <p><strong>Email:</strong> {{ user?.email }}</p>
+      <p><strong>User UID:</strong> {{ user?.uid }}</p>
+    </div>
+  
+    <button (click)="logout()">Logout</button>
+  </div>
+  
