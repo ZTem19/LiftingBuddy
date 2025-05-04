@@ -6,8 +6,8 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { MuscleGroupProgressPageComponent } from './muscle-group-progress-page/muscle-group-progress-page.component';
 import { ExerciseProgressPageComponent } from './exercise-progress-page/exercise-progress-page.component';
 import { SettingsPageComponent } from './settings-page/settings-page.component';
-import { LoginPageComponent } from './login-page/login-page.component';
-import { RegisterPageComponent } from './register-page/register-page.component';
+import { LoginPage } from './login-page/login-page.component';
+import { RegisterComponent } from './register-page/register-page.component';
 
 //add paths here for different pages
 export const routes: Routes = [
@@ -45,12 +45,12 @@ export const routes: Routes = [
 
   {
     path: 'login-page',
-    component: LoginPageComponent,
+    component: LoginPage,
   },
 
   {
     path: 'register-page',
-    component: RegisterPageComponent,
+    component: RegisterComponent,
   },
   
 ];
