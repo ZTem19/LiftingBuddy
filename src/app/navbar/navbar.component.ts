@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
     ['Here', 'here'],
     ['Like', 'like'],
     ['Calendar Test', 'calendar'],
-    ['Settings', 'settings'],
+    ['Settings', 'settings-page'],
     ['Interval Stats', 'interval-stats'],
     ['Interval Progress', 'interval-progress'],
     ['Exercise Progress', 'exercise-progress-page'],

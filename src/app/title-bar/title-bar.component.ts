@@ -1,11 +1,28 @@
-import { Component } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '../firebase-config';
 
 @Component({
   selector: 'app-title-bar',
-  imports: [],
+  imports: [RouterModule, NgIf],
   templateUrl: './title-bar.component.html',
   styleUrl: './title-bar.component.css'
 })
-export class TitleBarComponent {
+export class TitleBarComponent implements OnInit {
+  userLoggedIn: boolean = false;
+  public auth = getAuth(initializeApp(firebaseConfig));
 
+  ngOnInit() {
+    // Listen for authentication state changes
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.userLoggedIn = true;  // User is logged in
+      } else {
+        this.userLoggedIn = false; // User is not logged in
+      }
+    });
+  }
 }
