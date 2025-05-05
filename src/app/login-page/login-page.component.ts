@@ -1,6 +1,6 @@
 // src/app/login/login.page.ts
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { firebaseConfig } from '../firebase-config';
 import { FirebaseError, initializeApp } from 'firebase/app';
@@ -9,9 +9,10 @@ import { NgIf } from '@angular/common';
 
 
 
+
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, NgIf],
+  imports: [FormsModule, NgIf, RouterModule],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css'],
 })

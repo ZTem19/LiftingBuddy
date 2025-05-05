@@ -1,3 +1,4 @@
+// This is the User Authentication FireBase
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
