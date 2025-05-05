@@ -13,7 +13,12 @@
     (click)="setSelectedDay(day)"
     [class.selected]="isSelectedDate(day)"
   >
-    {{ day.getDate() }}
+    <span
+      [class.daycellcolor]="isExerciseOnDate(day)"
+      [style.color]="getMuscleGroupColor(day)"
+    >
+      {{ day.getDate() }}
+    </span>
   </p>
   }
 </div>

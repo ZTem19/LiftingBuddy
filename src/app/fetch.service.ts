@@ -484,7 +484,11 @@ export class FetchService implements OnInit {
     const allSets: eSet[] = [];
     for (const task of setsTasks) {
       const setsSnap = await task;
-      const sets: eSet[] = setsSnap.docs.map((setDoc) => setDoc.data() as eSet);
+      const sets: eSet[] = setsSnap.docs.map((setDoc) => {
+        const set = setDoc.data() as eSet;
+        set.numOfReps = setDoc.data()['reps'];
+        return set;
+      });
       sets.forEach((set) => allSets.push(set));
     }
 
@@ -495,8 +499,6 @@ export class FetchService implements OnInit {
         return data;
       }
     );
-
-    exercises.forEach((e) => console.log(JSON.stringify(e)));
 
     // Now that all the data is avaibleable constructj the final map
     const exerciseSetMap = new Map<string, ExerciseSet[]>();

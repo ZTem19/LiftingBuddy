@@ -43,6 +43,15 @@
   scale: 110%;
 }
 
+.daycellcolor::after {
+  content: "●"; /* Unicode circle */
+  display: block;
+  font-size: 0.6em;
+  line-height: 1;
+  text-align: center;
+  margin-top: -0.2em; /* slight overlap */
+}
+
 .selected {
-  color: #59bbfd;
+  scale: 110%;
 }

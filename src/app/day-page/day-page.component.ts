@@ -5,16 +5,17 @@ import { DatasetController } from 'chart.js';
 import { DataService } from '../data.service';
 import { Exercise, ExerciseSet } from '../../data types/data-types';
 import { MuscleGroup } from '../../data types/data-types';
+import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-day-page',
-  imports: [CalendarComponent, DatePipe],
+  imports: [CalendarComponent, DatePipe, FormsModule],
   templateUrl: './day-page.component.html',
   styleUrl: './day-page.component.css',
 })
 export class DayPageComponent implements OnInit {
   today: Date = new Date();
-  dayOfWeek: number = this.today.getDay();
+  selectedDate: Date = new Date();
   dataService: DataService = inject(DataService);
   exerciseList?: Exercise[];
   dataMap?: Map<string, ExerciseSet[]>;
@@ -31,25 +32,36 @@ export class DayPageComponent implements OnInit {
     this.getData(past, currentDate);
   }
 
-  async getData(startDate: Date, endDate: Date) {
+  async getData(startDate: Date, endDate: Date): Promise<void> {
     this.dataMap = await this.dataService.getDataInDateRange(
       startDate,
       endDate
     );
-    // const obj = Object.fromEntries(this.dataMap);
-    // console.log('Got Data map: ' + JSON.stringify(obj));
-    this.printMap();
+  }
+
+  changeDate(date: Date): void {
+    this.selectedDate = date;
   }
 
   getNameOfMuscleGroup(num: number): string {
     return MuscleGroup[num];
   }
 
-  private printMap() {
+  setDateToday(): void {
+    this.selectedDate = this.today;
+  }
+
+  setsOfCurrentDay(): ExerciseSet[] {
+    const dateString = this.selectedDate.toISOString().split('T')[0];
+    let exercises: ExerciseSet[] | undefined = [];
     if (this.dataMap) {
-      for (let date of this.dataMap?.keys()) {
-        console.log('Date : ' + date + '\nValue: ' + this.dataMap.get(date));
-      }
+      exercises = this.dataMap.get(dateString);
     }
+
+    if (exercises) {
+      return exercises;
+    }
+
+    return [];
   }
 }

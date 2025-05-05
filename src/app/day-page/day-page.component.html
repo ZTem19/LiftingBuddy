@@ -1,25 +1,40 @@
 <div class="page w-100">
   <div>
-    <p>Today's Date: {{ today | date : "mediumDate" }}</p>
-    <app-calendar></app-calendar>
+    <div class="datebar">
+      <p class="date">Date: {{ selectedDate | date : "mediumDate" }}</p>
+      <button class="todaybtn" (click)="setDateToday()">Today</button>
+    </div>
+    <app-calendar
+      (selectedDayChange)="changeDate($event)"
+      [(selectedDay)]="selectedDate"
+      [exerciseData]="dataMap"
+    ></app-calendar>
   </div>
-  <div class="exercisetable">
-    <table>
+  <div class="etable">
+    <table class="exercisetable">
       <thead>
         <th>Exercise Name</th>
         <th>Muscle Group</th>
-        <th>Decription</th>
+        <th>Sets</th>
+        <th>Volume</th>
       </thead>
+
+      @for(exerciseSet of setsOfCurrentDay(); track exerciseSet){
       <tr>
-        <td>bench press</td>
-        <td>Chest</td>
-        <td>push the bar</td>
+        <td>{{ exerciseSet.exercise.name }}</td>
+        <td>{{ getNameOfMuscleGroup(exerciseSet.exercise.muscleGroup) }}</td>
+        <td>
+          @for( set of exerciseSet.sets; track set){
+          <div class="setsCell">
+            Reps: {{ set.numOfReps }}, Weight {{ set.weight }}
+          </div>
+          }
+        </td>
+        <td>{{ exerciseSet.totalVolume }}</td>
       </tr>
-      @for(exercise of exerciseList; track exercise){
+      } @empty {
       <tr>
-        <td>{{ exercise.name }}</td>
-        <td>{{ getNameOfMuscleGroup(exercise.muscleGroup) }}</td>
-        <td>{{ exercise.description }}</td>
+        <td>No exercises for this day.</td>
       </tr>
       }
     </table>

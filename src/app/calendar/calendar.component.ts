@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MuscleGroup } from '../../data types/data-types';
+import { ExerciseSet, MuscleGroup } from '../../data types/data-types';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -9,9 +10,9 @@ import { MuscleGroup } from '../../data types/data-types';
 })
 export class CalendarComponent implements OnInit {
   calendarDates?: Date[];
-  @Input() muscleGroupDate?: Map<Date, MuscleGroup>;
+  @Input() exerciseData?: Map<string, ExerciseSet[]>;
 
-  selectedDay?: Date;
+  @Input() selectedDay?: Date;
   @Output() selectedDayChange = new EventEmitter<Date>();
 
   ngOnInit(): void {
@@ -47,5 +48,62 @@ export class CalendarComponent implements OnInit {
 
   setSelectedDay(date: Date) {
     this.selectedDay = date;
+    this.selectedDayChange.emit(date);
+  }
+
+  isExerciseOnDate(date: Date) {
+    const dateString = date.toISOString().split('T')[0];
+    return this.exerciseData?.has(dateString);
+  }
+
+  getMuscleGroupColor(date: Date): string {
+    const dateString = date.toISOString().split('T')[0];
+    const exerciseSets = this.exerciseData?.get(dateString);
+
+    const muscleGroupMap = new Map<number, number>();
+
+    if (exerciseSets) {
+      for (const exercise of exerciseSets) {
+        const mGroup = exercise.exercise.muscleGroup;
+
+        const currentValue = muscleGroupMap.get(mGroup) || 0;
+        muscleGroupMap.set(mGroup, currentValue + 1);
+      }
+    } else {
+      return '#f0f0f0';
+    }
+
+    // tuple of most common muscle group
+    // index 0 is the muscle group, index 1 is the amount of times worked
+    let mostCommon = [0, 0];
+
+    for (const value of muscleGroupMap.entries()) {
+      if (value[1] > mostCommon[1]) {
+        mostCommon = value;
+      }
+    }
+
+    switch (mostCommon[0]) {
+      case 1:
+        return 'red';
+
+      case 2:
+        return 'blue';
+
+      case 3:
+        return 'yellow';
+
+      case 4:
+        return 'cyan';
+
+      case 5:
+        return 'purple';
+
+      case 6:
+        return 'orange';
+
+      default:
+        return '#f0f0f0';
+    }
   }
 }
