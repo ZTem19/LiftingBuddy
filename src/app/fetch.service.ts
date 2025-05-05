@@ -13,16 +13,13 @@ import {
   deleteDoc,
   Timestamp,
   QuerySnapshot,
-  QueryDocumentSnapshot,
 } from '@angular/fire/firestore';
 import { Observable, of, combineLatest } from 'rxjs';
-import { switchMap, map, max } from 'rxjs/operators';
 import { Exercise, ExerciseSet, User } from '../data types/data-types';
 import { eSet } from '../data types/data-types';
 import { addDays } from '../utils/utils';
 import exerciseData from '../exercises.json';
 import { getEffortFactor } from '../utils/utils';
-import { documentId } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',

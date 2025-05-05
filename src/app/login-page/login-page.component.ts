@@ -1,14 +1,12 @@
 // src/app/login/login.page.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { firebaseConfig } from '../firebase-config';
 import { FirebaseError, initializeApp } from 'firebase/app';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
-
-
-
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-login',
@@ -22,22 +20,24 @@ export class LoginPage {
   errorMessage: string = '';
 
   // Initialize Firebase App
-  private auth = getAuth(initializeApp(firebaseConfig));
+  private auth = inject(Auth);
 
   constructor(private router: Router) {}
 
   // Login function
   async login() {
     try {
-      const userCredential = await signInWithEmailAndPassword(this.auth, this.email, this.password);
+      const userCredential = await signInWithEmailAndPassword(
+        this.auth,
+        this.email,
+        this.password
+      );
       const user = userCredential.user;
 
       sessionStorage.setItem('user', JSON.stringify(user));
 
       // If login is successful, navigate to the home or dashboard page
-      this.router.navigate(['/settings-page']);  // Replace with the route you want to go to after login
-
-
+      this.router.navigate(['/settings-page']); // Replace with the route you want to go to after login
     } catch (error) {
       // Handle error (e.g., invalid credentials)
       const firebaseError = error as FirebaseError;
