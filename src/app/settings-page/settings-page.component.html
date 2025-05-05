@@ -1,12 +1,21 @@
-<!-- src/app/settings/settings.page.html -->
-<div class="settings-container">
-    <h2>Settings</h2>
+<div class="w-100 min-vh-100 page">
+  <h1 class="text-center mb-5">Progress Report</h1>
+  <div class="settings-container">
     
     <div *ngIf="user">
       <p><strong>Email:</strong> {{ user?.email }}</p>
       <p><strong>User UID:</strong> {{ user?.uid }}</p>
     </div>
   
+    <div class="unit-toggle">
+      <label for="unitSelect"><strong>Preferred Unit:</strong></label>
+      <select id="unitSelect" [(ngModel)]="preferredUnit" (change)="onUnitChange($event)">
+        <option value="kg">Kilograms (kg)</option>
+        <option value="lbs">Pounds (lbs)</option>
+      </select>
+      <p></p>
+    </div>
+
     <button (click)="logout()">Logout</button>
   </div>
-  
+</div>
