@@ -54,7 +54,6 @@ export class FetchServiceService implements OnInit {
         const exerciseSets: ExerciseSet[] = [];
 
         if (dataSnapshot.empty) {
-            console.warn('No data documents found for userId:', userId, 'and day:', day);
             return []; // Return an empty array if no data documents are found
         }
 
@@ -257,9 +256,6 @@ export class FetchServiceService implements OnInit {
 
         // Add the exercise sets
         const setIds = await this.addSetstoExerciseOnDay(userId, day, randomExerciseId, sets);
-        console.log(
-          `Exercise ${i + 1} (Exercise ID: ${randomExerciseId}) added with ${numberOfSets} sets and IDs: ${setIds}`
-        );
       }
     } catch (error) {
       throw error;
