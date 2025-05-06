@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { ExerciseSet, MuscleGroup } from '../../data types/data-types';
 import { map } from 'rxjs';
 
@@ -9,6 +19,8 @@ import { map } from 'rxjs';
   styleUrl: './calendar.component.css',
 })
 export class CalendarComponent implements OnInit {
+  @ViewChild('calendar') private calendarScroll!: ElementRef;
+
   calendarDates?: Date[];
   @Input() exerciseData?: Map<string, ExerciseSet[]>;
 
@@ -16,6 +28,10 @@ export class CalendarComponent implements OnInit {
   @Output() selectedDayChange = new EventEmitter<Date>();
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.scrollBottom();
+    }, 0);
+
     let currentDate = new Date();
     this.selectedDay = currentDate;
     let dayOfWeek = currentDate.getDay();
@@ -105,6 +121,10 @@ export class CalendarComponent implements OnInit {
       default:
         return '#f0f0f0';
     }
-    console.log(this.calendarDates);
+  }
+
+  scrollBottom() {
+    const calendarElement = this.calendarScroll.nativeElement;
+    calendarElement.scrollTop = calendarElement.scrollHeight;
   }
 }
