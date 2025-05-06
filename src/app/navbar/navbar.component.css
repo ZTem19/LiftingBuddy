@@ -4,6 +4,8 @@
 .navbar {
   background-image: linear-gradient(to bottom, #9290c3, #070f2b);
   padding: 1em 0.5em 1em 0.5em;
+  transition: max-width 2s ease;
+  max-width: 10%;
 }
 
 .navbar > * :hover {
@@ -25,9 +27,25 @@
   color: #f0f0f0;
 }
 
-.extend_button {
-}
-
 .route_active {
   color: #070f2b;
+}
+
+.extend_button {
+  padding: 0;
+  border: 2px solid white;
+  border-radius: 0.25em;
+  cursor: pointer;
+  background-color: transparent;
+  width: fit-content;
+  align-self: flex-start;
+  justify-self: center;
+  margin-bottom: 1em;
+}
+
+.extend_button > hr {
+  background-color: white;
+  border: 2px solid white;
+  width: 2em;
+  margin: 0.5em;
 }

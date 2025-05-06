@@ -1,25 +1,24 @@
 import { NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../firebase-config';
 import { getAuth, signOut } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
-
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-settings-page',
   imports: [NgIf, FormsModule],
   templateUrl: './settings-page.component.html',
-  styleUrl: './settings-page.component.css'
+  styleUrl: './settings-page.component.css',
 })
 export class SettingsPageComponent implements OnInit {
   user: any;
-  private auth = getAuth(initializeApp(firebaseConfig));  // Initialize Firebase Auth here
+  private auth = inject(Auth); // Initialize Firebase Auth here
   constructor(private router: Router) {}
 
-  preferredUnit: 'kg' | 'lbs' = 'lbs' ;
-
+  preferredUnit: 'kg' | 'lbs' = 'lbs';
 
   ngOnInit() {
     // Retrieve user data from sessionStorage
@@ -47,14 +46,16 @@ export class SettingsPageComponent implements OnInit {
 
   logout() {
     // Sign the user out of Firebase
-    signOut(this.auth).then(() => {
-      // Clear user data from sessionStorage
-      sessionStorage.removeItem('user');
-      
-      // Navigate to the login page
-      this.router.navigate(['/login-page']);
-    }).catch((error) => {
-      console.error('Error during logout: ', error);
-    });
+    signOut(this.auth)
+      .then(() => {
+        // Clear user data from sessionStorage
+        sessionStorage.removeItem('user');
+
+        // Navigate to the login page
+        this.router.navigate(['/login-page']);
+      })
+      .catch((error) => {
+        console.error('Error during logout: ', error);
+      });
   }
 }

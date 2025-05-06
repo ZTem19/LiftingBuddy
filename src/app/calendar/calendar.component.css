@@ -36,4 +36,22 @@
   color: #f0f0f0;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+
+.daycell:hover {
+  scale: 110%;
+}
+
+.daycellcolor::after {
+  content: "●"; /* Unicode circle */
+  display: block;
+  font-size: 0.6em;
+  line-height: 1;
+  text-align: center;
+  margin-top: -0.2em; /* slight overlap */
+}
+
+.selected {
+  scale: 110%;
 }
