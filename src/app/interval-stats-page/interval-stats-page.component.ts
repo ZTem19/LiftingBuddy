@@ -1,25 +1,32 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { VolumeMuscleGroupComponent } from '../volume-muscle-group/volume-muscle-group.component';
-import { VolumeExerciseComponent } from "../volume-exercise/volume-exercise.component";
+import { VolumeExerciseComponent } from '../volume-exercise/volume-exercise.component';
 import { PercentageMuscleGroupWorkedComponent } from '../percentage-muscle-group-worked/percentage-muscle-group-worked.component';
-import { FetchServiceService } from '../fetch-service.service';
+import { FetchService } from '../fetch.service';
 import { DataService } from '../data.service';
-import exerciseData from '../../exercises.json'
+import exerciseData from '../../exercises.json';
 
 @Component({
   selector: 'app-interval-stats-page',
-  imports: [VolumeMuscleGroupComponent, FormsModule, VolumeExerciseComponent, PercentageMuscleGroupWorkedComponent],
+  imports: [
+    VolumeMuscleGroupComponent,
+    FormsModule,
+    VolumeExerciseComponent,
+    PercentageMuscleGroupWorkedComponent,
+  ],
   templateUrl: './interval-stats-page.component.html',
-  styleUrl: './interval-stats-page.component.css'
+  styleUrl: './interval-stats-page.component.css',
 })
 export class IntervalStatsPageComponent {
   startDate: Date = new Date();
   endDate: Date = new Date();
   showStats: boolean = false;
 
-  constructor(private fetchService: FetchServiceService, private dataService: DataService) {
-    }
+  constructor(
+    private fetchService: FetchService,
+    private dataService: DataService
+  ) {}
 
   onSubmit(form: any): void {
     this.showStats = false;
@@ -42,7 +49,7 @@ export class IntervalStatsPageComponent {
       return;
     }
 
-    if(parsedStartDate >= parsedEndDate){
+    if (parsedStartDate >= parsedEndDate) {
       alert('The end date must be later than the start date.');
       return;
     }
@@ -52,8 +59,7 @@ export class IntervalStatsPageComponent {
     this.showStats = true;
   }
 
-  async addExercise()
-  {
+  async addExercise() {
     // this.fetchService.getSetsForUserOnDay("3k7dINFrSssLj0qq8TqF", new Date(2025, 2, 2)).subscribe(
     //   (exerciseSets) => {
     //     console.log(exerciseSets); // Print the exercise sets array
@@ -69,8 +75,11 @@ export class IntervalStatsPageComponent {
     //     console.log("Observable completed."); // Optional: Handle completion
     //   }
     // );
-    console.log("about to print data")
-    let dataToPrint = await this.dataService.getExerciseSetsForDay("3k7dINFrSssLj0qq8TqF", new Date(2, 2, 2025));
-    console.log(dataToPrint)
+    console.log('about to print data');
+    let dataToPrint = await this.dataService.getExerciseSetsForDay(
+      '3k7dINFrSssLj0qq8TqF',
+      new Date(2, 2, 2025)
+    );
+    console.log(dataToPrint);
   }
 }

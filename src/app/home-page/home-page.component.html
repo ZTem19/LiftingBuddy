@@ -1,4 +1,4 @@
 <p>home-page works!</p>
-@for(user of users; track user){
+@if(this.user != null){
 <p>{{ user.fname }}, {{ user.lname }}</p>
 }

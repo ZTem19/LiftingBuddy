@@ -1,4 +1,5 @@
 export enum MuscleGroup {
+  Unknown = 0,
   Chest = 1,
   Back = 2,
   Biceps = 3,
@@ -14,15 +15,15 @@ export interface Exercise {
   muscleGroup: MuscleGroup;
 }
 
-export interface Set {
+export interface eSet {
+  dataId: string;
   numOfReps: number;
   weight: number;
 }
 
 export interface ExerciseSet {
-  
   exercise: Exercise;
-  sets: Set[];
+  sets: eSet[];
   totalVolume: number;
 }
 

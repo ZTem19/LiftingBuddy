@@ -1,13 +1,22 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore} from '@angular/fire/firestore';
-
 //Fire base setup
-import { firebaseConfig} from '../../firebaseapi';
+import {
+  provideFirebaseApp,
+  initializeApp,
+  firebaseApp$,
+  FirebaseApp,
+} from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { firebaseConfig } from '../../firebaseapi';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideAuth(() => getAuth(inject(FirebaseApp))),
     provideFirestore(() => getFirestore()),
   ],
 };
