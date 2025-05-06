@@ -35,8 +35,9 @@ export interface MuscleGroupProgress {
 }
 
 export interface User {
+  email: string;
   id: string;
   fname: string;
   lname: string;
-  password: string;
+  units: string;
 }
