@@ -39,6 +39,7 @@ export class IntervalStatsPageComponent {
     private router: Router
   ) {}
 
+  // Get user info especially for whether to use kg or pounds
   ngOnInit()
   {
     this.userSubscription = this.authService.user.subscribe(user => {

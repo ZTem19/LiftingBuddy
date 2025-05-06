@@ -28,6 +28,7 @@ export class IntervalProgressComponent {
   private authService = inject(AuthService);
   private router = inject(Router)
 
+  // Get user info especially for whether to use kg or pounds
   ngOnInit()
   {
     this.userSubscription = this.authService.user.subscribe(user => {
