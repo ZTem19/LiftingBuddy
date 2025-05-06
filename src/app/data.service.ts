@@ -9,18 +9,26 @@ import { of, Observable, forkJoin, mapTo } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FetchService } from './fetch.service';
 import * as exercises from '../exercises.json';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService implements OnInit {
   private dataMap: Map<string, ExerciseSet[]> = new Map();
-  private userId: string = '3k7dINFrSssLj0qq8TqF';
+  private userId: string = '';
   private fetchService: FetchService = inject(FetchService);
+  private authService = inject(AuthService);
 
   constructor() {}
 
   ngOnInit(): void {
+    this.authService.user.subscribe((u) => {
+      if (u != null) {
+        this.userId = u.id;
+      }
+    });
+
     // Get workout history for the last 3 months
     const currentDate = new Date();
     const past = new Date();

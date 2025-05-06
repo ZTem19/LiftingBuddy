@@ -8,6 +8,7 @@ import {
   documentId,
   where,
   getDocs,
+  getDoc,
 } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { firebaseConfig } from './firebase-config';
@@ -15,10 +16,11 @@ import { initializeApp } from 'firebase/app';
 import { Auth, user } from '@angular/fire/auth';
 import { User as fUser } from '@angular/fire/auth';
 import { FirebaseApp } from '@angular/fire/app';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, updateDoc } from '@angular/fire/firestore';
 import { User } from '../data types/data-types';
 import {
   BehaviorSubject,
+  firstValueFrom,
   from,
   Observable,
   of,
@@ -64,23 +66,17 @@ export class AuthService implements OnInit {
   }
 
   private async getUserData(uid: string): Promise<User> {
-    const userQuery = query(this.userCol, where('uid', '==', uid));
+    const docRef = doc(this.firestore, 'users/' + uid);
+    const userDocs = await getDoc(docRef);
 
-    const userDocs = await getDocs(userQuery);
-
-    if (userDocs.size > 1) {
-      throw new Error('Multiple users with uid: ' + uid);
-    }
-
-    const user: User = userDocs.docs.map((doc) => {
-      return doc.data() as User;
-    })[0];
-
+    const user = userDocs.data() as User;
+    user.id = userDocs.id;
+    console.log(JSON.stringify(user));
     return user;
   }
 
   // Register user and store additional info in Firestore
-  async register(email: string, password: string) {
+  async register(email: string, password: string, userInfo: User) {
     const userCredential = await createUserWithEmailAndPassword(
       this.auth,
       email,
@@ -95,8 +91,35 @@ export class AuthService implements OnInit {
     await setDoc(userRef, {
       email: user.email,
       createdAt: new Date().toISOString(),
+      fname: userInfo.fname,
+      lname: userInfo.lname,
+      units: userInfo.units,
     });
 
     return user;
+  }
+
+  async saveUser() {
+    const user = await firstValueFrom(this.user);
+    if (user != null) {
+      const userRef = doc(this.firestore, 'users', user.id);
+      updateDoc(userRef, {
+        fname: user.fname,
+        lname: user.lname,
+        units: user.units,
+      });
+    } else {
+      console.error('Trying to save null user!');
+    }
+  }
+
+  async setUserUnits(units: string) {
+    const user = await firstValueFrom(this.user);
+    if (user != null) {
+      user.units = units;
+      this.userSubject.next(user);
+    } else {
+      console.error('Trying to set units for null user!');
+    }
   }
 }
