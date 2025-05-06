@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { VolumeMuscleGroupComponent } from '../volume-muscle-group/volume-muscle-group.component';
 import { VolumeExerciseComponent } from '../volume-exercise/volume-exercise.component';
@@ -6,6 +6,11 @@ import { PercentageMuscleGroupWorkedComponent } from '../percentage-muscle-group
 import { FetchService } from '../fetch.service';
 import { DataService } from '../data.service';
 import exerciseData from '../../exercises.json';
+import { User } from '../../data types/data-types';
+import { Auth } from '@angular/fire/auth';
+import { AuthService } from '../auth.service';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-interval-stats-page',
@@ -23,10 +28,32 @@ export class IntervalStatsPageComponent {
   endDate: Date = new Date();
   showStats: boolean = false;
 
+  private userSubscription?: Subscription;
+  user?: User | null = null;
+  usinglbs: boolean = true; 
+  private auth = inject(Auth);
+  private authService = inject(AuthService);
+
   constructor(
-    private fetchService: FetchService,
-    private dataService: DataService
+    private dataService: DataService,
+    private router: Router
   ) {}
+
+  // Get user info especially for whether to use kg or pounds
+  ngOnInit()
+  {
+    this.userSubscription = this.authService.user.subscribe(user => {
+      if (user == null) {
+        this.router.navigate(['login-page']);
+      } else {
+        this.user = user;
+        if (user.units === 'kg') 
+        {
+          this.usinglbs = false;
+        }
+      }
+    });
+  }
 
   onSubmit(form: any): void {
     this.showStats = false;
@@ -59,27 +86,7 @@ export class IntervalStatsPageComponent {
     this.showStats = true;
   }
 
-  async addExercise() {
-    // this.fetchService.getSetsForUserOnDay("3k7dINFrSssLj0qq8TqF", new Date(2025, 2, 2)).subscribe(
-    //   (exerciseSets) => {
-    //     console.log(exerciseSets); // Print the exercise sets array
-    //     // You can also iterate through the array if needed:
-    //     exerciseSets.forEach(set => {
-    //       console.log(set); // Print each individual set
-    //     });
-    //   },
-    //   (error) => {
-    //     console.error("Error fetching exercise sets:", error);
-    //   },
-    //   () => {
-    //     console.log("Observable completed."); // Optional: Handle completion
-    //   }
-    // );
-    console.log('about to print data');
-    let dataToPrint = await this.dataService.getExerciseSetsForDay(
-      '3k7dINFrSssLj0qq8TqF',
-      new Date(2, 2, 2025)
-    );
-    console.log(dataToPrint);
+  ngOnDestroy() {
+    this.userSubscription?.unsubscribe();
   }
 }

@@ -1,7 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IntervalProgressTableComponent } from '../interval-progress-table/interval-progress-table.component';
 import { addDays } from '../../utils/utils';
+import { User } from '../../data types/data-types';
+import { Auth } from '@angular/fire/auth';
+import { AuthService } from '../auth.service';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-interval-progress',
@@ -15,6 +20,29 @@ export class IntervalProgressComponent {
   startDate: Date = new Date();
   numberOfIntervals: number = 0;
   numberOfDays: number = 0;
+
+  private userSubscription?: Subscription;
+  user?: User | null = null;
+  usinglbs: boolean = true; 
+  private auth = inject(Auth);
+  private authService = inject(AuthService);
+  private router = inject(Router)
+
+  // Get user info especially for whether to use kg or pounds
+  ngOnInit()
+  {
+    this.userSubscription = this.authService.user.subscribe(user => {
+      if (user == null) {
+        this.router.navigate(['login-page']);
+      } else {
+        this.user = user;
+        if (user.units === 'kg') 
+        {
+          this.usinglbs = false;
+        }
+      }
+    });
+  }
   
   onSubmit(form: any): void {
     const today = new Date();

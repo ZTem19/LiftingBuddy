@@ -3,16 +3,18 @@ import { DataService } from '../data.service';
 import { IntervalServiceService } from '../interval-service.service';
 import { OnInit, OnChanges } from '@angular/core';
 import { MuscleGroup } from '../../data types/data-types';
+import { WeightUnitPipe } from '../weight-unit.pipe';
 
 @Component({
   selector: 'app-volume-muscle-group',
-  imports: [],
+  imports: [WeightUnitPipe],
   templateUrl: './volume-muscle-group.component.html',
   styleUrl: './volume-muscle-group.component.css'
 })
 export class VolumeMuscleGroupComponent implements OnChanges {
    @Input() startDate!: Date;
    @Input() endDate!: Date;
+   @Input() usinglbs!: boolean;
   
   volumeMuscleGroupMap: Map<MuscleGroup, number> = new Map();
 
