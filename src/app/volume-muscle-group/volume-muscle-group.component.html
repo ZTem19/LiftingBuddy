@@ -11,27 +11,27 @@
     <tbody>
       <tr>
         <td>Chest</td>
-        <td>{{ chestVolume }}</td>
+        <td>{{ chestVolume | weightUnit:usinglbs }}</td>
       </tr>
       <tr>
         <td>Back</td>
-        <td>{{ backVolume }}</td>
+        <td>{{ backVolume | weightUnit:usinglbs }}</td>
       </tr>
       <tr>
         <td>Biceps</td>
-        <td>{{ bicepsVolume }}</td>
+        <td>{{ bicepsVolume | weightUnit:usinglbs}}</td>
       </tr>
       <tr>
         <td>Tricpes</td>
-        <td>{{ tricepsVolume }}</td>
+        <td>{{ tricepsVolume | weightUnit:usinglbs}}</td>
       </tr>
       <tr>
         <td>Glutes/Quads</td>
-        <td>{{ glutesQuadsVolume }}</td>
+        <td>{{ glutesQuadsVolume | weightUnit:usinglbs}}</td>
       </tr>
       <tr>
         <td>Hamstrings/Calves</td>
-        <td>{{ hamstringsCalvesVolume }}</td>
+        <td>{{ hamstringsCalvesVolume | weightUnit:usinglbs}}</td>
       </tr>
     </tbody>
   </table>

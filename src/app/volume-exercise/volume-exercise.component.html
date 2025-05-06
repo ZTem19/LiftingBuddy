@@ -19,7 +19,7 @@
 
         }
         <td>{{ entry[1].exercise.name}}</td>
-        <td>{{ entry[1].volume }}</td>
+        <td>{{ entry[1].volume | weightUnit:usinglbs}}</td>
       </tr>
       }
     </tbody>

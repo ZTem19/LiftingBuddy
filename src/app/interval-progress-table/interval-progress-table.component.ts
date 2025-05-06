@@ -1,10 +1,11 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { MuscleGroup, MuscleGroupProgress } from '../../data types/data-types';
 import { IntervalServiceService } from '../interval-service.service';
+import { WeightUnitPipe } from '../weight-unit.pipe';
 
 @Component({
   selector: 'app-interval-progress-table',
-  imports: [],
+  imports: [WeightUnitPipe],
   templateUrl: './interval-progress-table.component.html',
   styleUrl: './interval-progress-table.component.css'
 })
@@ -12,6 +13,7 @@ export class IntervalProgressTableComponent implements OnChanges {
   @Input() startDate: Date = new Date();
   @Input() numIntervals: number = 0;
   @Input() numDays: number = 0;
+  @Input() usinglbs!: boolean;
 
   intervalProgressMap: Map<MuscleGroup, MuscleGroupProgress> = new Map();
   constructor(private intervalService: IntervalServiceService) {}

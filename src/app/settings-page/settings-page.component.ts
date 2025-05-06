@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Auth } from '@angular/fire/auth';
 import { AuthService } from '../auth.service';
 import { firstValueFrom } from 'rxjs';
+import { DataService } from '../data.service';
 import { User } from '../../data types/data-types';
 
 @Component({
@@ -20,6 +21,7 @@ export class SettingsPageComponent implements OnInit {
   user?: User | null = null;
   private auth = inject(Auth); // Initialize Firebase Auth here
   private authService = inject(AuthService);
+  private dataService = inject(DataService);
   constructor(private router: Router) {}
 
   preferredUnit: 'kg' | 'lbs' = 'lbs';
@@ -71,6 +73,7 @@ export class SettingsPageComponent implements OnInit {
 
         // Navigate to the login page
         this.router.navigate(['/login-page']);
+        
       })
       .catch((error) => {
         console.error('Error during logout: ', error);

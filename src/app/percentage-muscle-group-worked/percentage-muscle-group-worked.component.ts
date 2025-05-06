@@ -7,16 +7,18 @@ import {
 } 
 from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { WeightNumberConverterPipe } from '../weight-number-converter.pipe';
 
 @Component({
   selector: 'app-percentage-muscle-group-worked',
-  imports: [],
+  imports: [WeightNumberConverterPipe],
   templateUrl: './percentage-muscle-group-worked.component.html',
   styleUrl: './percentage-muscle-group-worked.component.css'
 })
 export class PercentageMuscleGroupWorkedComponent{
   @Input() startDate!: Date;
   @Input() endDate!: Date;
+  @Input() usinglbs!: boolean;
 
   volumeMuscleGroupMap: Map<MuscleGroup, number> = new Map();
 
@@ -26,6 +28,7 @@ export class PercentageMuscleGroupWorkedComponent{
   viewInitialized: boolean = false;
   shouldShowChart: boolean = true;
   isLoaded: boolean = true;
+  weightNumberConverterPipe: WeightNumberConverterPipe = new WeightNumberConverterPipe();
 
   constructor(private intervalService: IntervalServiceService) {
     Chart.register(...registerables, ChartDataLabels);
@@ -62,6 +65,10 @@ export class PercentageMuscleGroupWorkedComponent{
     const labels = ["Chest", "Back", "Biceps", "Triceps", "Glutes/Quads", "Hamstrings/Calves"];
     // Get data values from a Map that tracks volume per muscle group
     const rawData = Array.from(this.volumeMuscleGroupMap.values());
+     // Convert the values based on usinglbs input
+     const convertedData = rawData.map(value =>
+      this.weightNumberConverterPipe.transform(value, this.usinglbs)
+    );
     // Calculate the total volume (sum of all data values)
     const total = rawData.reduce((a, b) => a + b, 0);
 
@@ -70,9 +77,9 @@ export class PercentageMuscleGroupWorkedComponent{
     const filteredData: number[] = [];
 
     labels.forEach((label, i) => {
-      if (rawData[i] > 0) {
+      if (convertedData[i] > 0) {
         filteredLabels.push(label);
-        filteredData.push(rawData[i]);
+        filteredData.push(convertedData[i]);
       }
     });
 
@@ -82,6 +89,8 @@ export class PercentageMuscleGroupWorkedComponent{
     if (!this.shouldShowChart) {
       return; // Skip rendering the chart entirely
     }
+
+    const unitLabel = this.usinglbs ? 'lbs' : 'kg';
 
     // Custom plugin to draw the total in the bottom-left of the chart
     const totalBottomLeftPlugin = {
@@ -96,7 +105,6 @@ export class PercentageMuscleGroupWorkedComponent{
         // Set the font style and text appearance
         ctx.font = 'bold 14px sans-serif';
         ctx.fillStyle = '#f0f0f0';
-        ctx.fillStyle = '#333';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'bottom';
     
@@ -105,7 +113,7 @@ export class PercentageMuscleGroupWorkedComponent{
         const y = chartArea.bottom - 10;
         
         // Draw the text on the canvas
-        ctx.fillText(`Total: ${total}`, x, y);
+        ctx.fillText(`Total: ${total} ${unitLabel}`, x, y);
 
         // Restore the original drawing state
         ctx.restore();
@@ -148,7 +156,8 @@ export class PercentageMuscleGroupWorkedComponent{
             formatter: (value: number, context: any) => {
               // Show percentage labels on each slice;
               const percentage = ((value / total) * 100).toFixed(1);
-              return `${percentage}%`;
+              const unit = this.usinglbs ? 'lbs' : 'kg';
+              return `${value} ${unit}\n(${percentage}%)`;
             },
           },
         },
