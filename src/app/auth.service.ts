@@ -95,6 +95,7 @@ export class AuthService implements OnInit {
     await setDoc(userRef, {
       email: user.email,
       createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString()
     });
 
     return user;

@@ -6,6 +6,7 @@ import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../firebase-config';
 import { Auth } from '@angular/fire/auth';
 
+
 @Component({
   selector: 'app-title-bar',
   imports: [RouterModule, NgIf],

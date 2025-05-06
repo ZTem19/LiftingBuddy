@@ -22,6 +22,7 @@ export class LoginPage {
   // Initialize Firebase App
   private auth = inject(Auth);
 
+
   constructor(private router: Router) {}
 
   // Login function
