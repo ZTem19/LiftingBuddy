@@ -31,7 +31,7 @@ export class DataService implements OnInit {
 
   ngOnInit(): void 
   {
-    this.getUser();
+    this.getUserId();
     
     // Get workout history for the last 3 months
     const currentDate = new Date();
@@ -40,7 +40,7 @@ export class DataService implements OnInit {
     this.populateDateMap(past, currentDate);
   }
 
-  private async getUser() 
+  private async getUserId() 
   {
       let user = await firstValueFrom(this.authService.user);
       if (user == null) {
