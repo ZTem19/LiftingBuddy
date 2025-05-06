@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../data types/data-types';
-import { UserAuthenticationService } from '../user-authentication.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home-page',
@@ -9,10 +9,14 @@ import { UserAuthenticationService } from '../user-authentication.service';
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent implements OnInit {
-  users?: User[];
-  userService = inject(UserAuthenticationService);
+  user: User | null = null;
+  userService = inject(AuthService);
 
   ngOnInit() {
-    this.userService.getUsers().subscribe((users) => (this.users = users));
+    console.log('Is user signed in: ' + this.userService.userSignedIn());
+    this.userService.user.subscribe((u) => {
+      this.user = u;
+      console.log(u);
+    });
   }
 }

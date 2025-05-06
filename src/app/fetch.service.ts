@@ -413,13 +413,6 @@ export class FetchService implements OnInit {
     // start query for exercises
     const exerciseListTask = getDocs(this.exerciseCollection);
 
-    console.log(
-      'Geting data from : ' +
-        startDate.toISOString() +
-        '\nTo :' +
-        endDate.toISOString()
-    );
-
     const dataQuery = query(
       this.dataCollection,
       where('userId', '==', userId),
@@ -428,8 +421,6 @@ export class FetchService implements OnInit {
     );
 
     let dataSnapshot: QuerySnapshot = await getDocs(dataQuery);
-
-    console.log('Got: ' + dataSnapshot.docs.length + ' data documents');
 
     // query all docs at then map them back and construct them
     const ids = [];
@@ -453,6 +444,7 @@ export class FetchService implements OnInit {
       });
     }
 
+    // Firestore max 'in' size for query
     const maxQuerySize = 10;
 
     // Query sets that reference data by id
@@ -462,12 +454,6 @@ export class FetchService implements OnInit {
       let string = ids[i];
       currentSetIds.push(string);
       if (currentSetIds.length == maxQuerySize || i == ids.length - 1) {
-        // console.log(
-        //   'Making query to sets with array: ' +
-        //     currentSetIds.toString() +
-        //     '\nLength: ' +
-        //     currentSetIds.length
-        // );
         setsTasks.push(
           getDocs(
             query(this.setsCollection, where('dataId', 'in', currentSetIds))
@@ -529,8 +515,6 @@ export class FetchService implements OnInit {
         console.error('No Exercise for :' + doc.date);
       }
     }
-    console.log('returning map: ');
-    this.printMap(exerciseSetMap);
     return exerciseSetMap;
   }
 

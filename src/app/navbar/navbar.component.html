@@ -7,7 +7,16 @@
       <hr />
       <hr />
     </button>
-    @if(isNavbarExtended){ @for (link of links; track $index){
+    <p
+      class="p-2 navlink"
+      [routerLinkActive]="'route_active'"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="''"
+    >
+      Home
+    </p>
+    @if(isNavbarExtended){@if(this.user != null){ @for (link of links; track
+    $index){
     <p
       class="p-2 navlink"
       [routerLinkActive]="'route_active'"
@@ -16,7 +25,7 @@
     >
       {{ link[0] }}
     </p>
-    } }
+    } } }
 
     <span class="flex-grow-1"></span>
   </div>

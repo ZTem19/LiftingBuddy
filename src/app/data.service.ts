@@ -21,10 +21,7 @@ export class DataService implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // this.preloadMonthSets('3k7dINFrSssLj0qq8TqF', 2025, 1);
-
     // Get workout history for the last 3 months
-    console.log('Init data service');
     const currentDate = new Date();
     const past = new Date();
     past.setDate(currentDate.getDate() - 90);
@@ -94,7 +91,7 @@ export class DataService implements OnInit {
       let group: number = 0;
       this.dataMap.get(this.getDateString(startDate))?.forEach((set) => {
         if (set == null) {
-          console.log('No set for :' + startDate.toString());
+          console.error('No set for :' + startDate.toString());
         } else {
           group = set.exercise.muscleGroup;
         }

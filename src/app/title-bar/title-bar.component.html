@@ -1,8 +1,8 @@
 <!-- Only show the title-bar if the user is not logged in -->
 <div *ngIf="!userLoggedIn" class="titlebar d-flex">
   <p class="title">Lifting Buddy</p>
-  <a class="item" [routerLink]="['/login']">Login</a>
-  <a class="item" [routerLink]="['/register']">Register</a>
+  <a class="item" [routerLink]="['/login-page']">Login</a>
+  <a class="item" [routerLink]="['/register-page']">Register</a>
 </div>
 
 <!-- Show the logged-in navbar if the user is logged in -->
