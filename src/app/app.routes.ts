@@ -39,7 +39,6 @@ export class UserGuard implements CanMatch {
   }
 }
 
-
 //add paths here for different pages
 export const routes: Routes = [
   {
@@ -75,6 +74,7 @@ export const routes: Routes = [
     path: 'settings-page',
     component: SettingsPageComponent,
     canMatch: [UserGuard],
+  },
   {
     path: 'login-page',
     component: LoginPage,
