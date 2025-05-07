@@ -18,10 +18,17 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { WeightUnitPipe } from '../weight-unit.pipe';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { AddworkoutComponent } from '../addworkout/addworkout.component';
 
 @Component({
   selector: 'app-day-page',
-  imports: [CalendarComponent, DatePipe, FormsModule, WeightUnitPipe],
+  imports: [
+    CalendarComponent,
+    DatePipe,
+    FormsModule,
+    WeightUnitPipe,
+    AddworkoutComponent,
+  ],
   templateUrl: './day-page.component.html',
   styleUrl: './day-page.component.css',
 })
@@ -40,6 +47,7 @@ export class DayPageComponent implements OnInit, AfterContentInit {
   exerciseList?: Exercise[];
   dataMap?: Map<string, ExerciseSet[]>;
   isLoadingData: boolean = false;
+  addingWorkout: boolean = false;
 
   ngOnInit(): void {
     this.dataService.ngOnInit();
@@ -69,6 +77,7 @@ export class DayPageComponent implements OnInit, AfterContentInit {
       endDate,
       this.userID
     );
+    this.isLoadingData = false;
   }
 
   changeDate(date: Date): void {

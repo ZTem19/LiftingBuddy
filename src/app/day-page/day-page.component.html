@@ -1,4 +1,7 @@
 <div class="page w-100">
+  @if(addingWorkout){
+  <app-addworkout />
+  }
   <div>
     <div class="datebar">
       <p class="date">Date: {{ selectedDate | date : "mediumDate" }}</p>
@@ -13,10 +16,12 @@
     </div>
   </div>
   @if(isLoadingData){
-  <p>Loading Data</p>
+  <h3 class="loadingtext">Loading Data</h3>
   }
   <div class="btncontainer">
-    <button class="addworkout">Add Workout</button>
+    <button class="addworkout" (click)="addingWorkout = true">
+      Add Workout
+    </button>
   </div>
   <div class="etable">
     <table class="exercisetable">

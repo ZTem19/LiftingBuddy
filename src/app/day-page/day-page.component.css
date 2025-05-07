@@ -89,3 +89,8 @@
   align-self: flex-end;
   justify-self: end;
 }
+
+.loadingtext {
+  color: #f0f0f0;
+  margin: 1em;
+}
