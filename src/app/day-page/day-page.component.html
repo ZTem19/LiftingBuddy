@@ -1,6 +1,6 @@
 <div class="page w-100">
   @if(addingWorkout){
-  <app-addworkout />
+  <app-addworkout (close)="toggleMenu()" [selectedDate]="selectedDate" />
   }
   <div>
     <div class="datebar">

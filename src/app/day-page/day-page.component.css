@@ -48,14 +48,13 @@
   display: flex;
   justify-content: space-between;
   min-width: fit-content;
-  max-width: 45%;
-  width: 45%;
+  max-width: 30%;
 }
 
 .todaybtn {
   margin-left: 17em;
   background-color: #535c91;
-  border: 2px solid #070f2b;
+  border: 2px solid #9290c3;
   color: #f0f0f0;
   border-radius: 0.5em;
   padding: 0.5em;
@@ -81,13 +80,18 @@
 .addworkout {
   margin: 1em 0 0 0;
   padding: 0.5em;
-  background-color: dimgray;
-  border: 1px solid grey;
+  background-color: #535c91;
+  border: 1px solid #9290c3;
   width: fit-content;
   height: fit-content;
   border-radius: 1em;
   align-self: flex-end;
   justify-self: end;
+  color: #f0f0f0;
+}
+
+.addworkout:hover {
+  scale: 105%;
 }
 
 .loadingtext {

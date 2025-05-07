@@ -1,0 +1,88 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.menu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5em;
+  z-index: 1001;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.25);
+  background-image: linear-gradient(to bottom right, dimgrey, black);
+
+  width: 35dvw;
+  height: fit-content;
+}
+
+.menu * {
+  color: #f0f0f0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  height: 2em;
+}
+
+.topbar * {
+  text-align: center;
+}
+
+.menubtn {
+  border-radius: 0.5em;
+  background-color: #1b1a55;
+  border: 2px solid #9290c3;
+}
+
+.menubtn:hover {
+  scale: 105%;
+  background-color: #0b0a45;
+}
+
+.form {
+  margin: 1em;
+  height: max-content;
+  width: inherit;
+}
+
+.form label {
+  margin-right: 1em;
+}
+
+.formrow {
+  display: flex;
+  margin: 0.5em;
+  width: inherit;
+}
+
+.formrow * {
+  margin: 0 1em 0 1em;
+}
+
+.select {
+  width: max-content;
+  background-color: #1b1a55;
+  border: 1px solid #9290c3;
+  border-radius: 0.5em;
+}
+
+.bottombar {
+  display: flex;
+  margin: 0.5em;
+  justify-content: end;
+}
+
+.formcontainer {
+  display: flex;
+  flex-direction: column;
+}

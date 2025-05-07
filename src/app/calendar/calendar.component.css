@@ -6,7 +6,7 @@
 .calendar {
   border: 4px solid #535c91;
   border-radius: 0.5em;
-  max-width: 45%;
+  max-width: 55dvw;
   width: auto;
   min-width: fit-content;
   /* padding: 0em 1em 1em 1em; */

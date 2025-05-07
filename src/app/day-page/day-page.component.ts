@@ -64,6 +64,10 @@ export class DayPageComponent implements OnInit, AfterContentInit {
     });
   }
 
+  toggleMenu() {
+    this.addingWorkout = !this.addingWorkout;
+  }
+
   ngAfterContentInit(): void {
     const currentDate = new Date();
     const past = new Date();
