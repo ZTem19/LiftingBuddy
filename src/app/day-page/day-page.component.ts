@@ -1,4 +1,13 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  SimpleChange,
+  ViewChild,
+  signal,
+  AfterContentInit,
+} from '@angular/core';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { DatePipe } from '@angular/common';
 import { DatasetController } from 'chart.js';
@@ -6,28 +15,48 @@ import { DataService } from '../data.service';
 import { Exercise, ExerciseSet } from '../../data types/data-types';
 import { MuscleGroup } from '../../data types/data-types';
 import { FormsModule, NgModel } from '@angular/forms';
+import { WeightUnitPipe } from '../weight-unit.pipe';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-day-page',
-  imports: [CalendarComponent, DatePipe, FormsModule],
+  imports: [CalendarComponent, DatePipe, FormsModule, WeightUnitPipe],
   templateUrl: './day-page.component.html',
   styleUrl: './day-page.component.css',
 })
-export class DayPageComponent implements OnInit {
+export class DayPageComponent implements OnInit, AfterContentInit {
   @ViewChild(CalendarComponent) calendarComponent!: CalendarComponent;
 
+  dataService: DataService = inject(DataService);
+  userService: AuthService = inject(AuthService);
+  changesRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+  router: Router = inject(Router);
+
+  userUnits: boolean = true;
+  userID: string = '';
   today: Date = new Date();
   selectedDate: Date = new Date();
-  dataService: DataService = inject(DataService);
   exerciseList?: Exercise[];
   dataMap?: Map<string, ExerciseSet[]>;
+  isLoadingData: boolean = false;
 
   ngOnInit(): void {
     this.dataService.ngOnInit();
-    this.dataService
-      .getAllExercises()
-      .subscribe((exercises) => (this.exerciseList = exercises));
+    this.isLoadingData = true;
+    this.dataService.getAllExercises().subscribe((exercises) => {
+      this.exerciseList = exercises;
+    });
 
+    this.userService.user.subscribe((u) => {
+      if (u != null) {
+        this.userUnits = u.units == 'lbs' ? true : false;
+        this.userID = u.id;
+      }
+    });
+  }
+
+  ngAfterContentInit(): void {
     const currentDate = new Date();
     const past = new Date();
     past.setDate(currentDate.getDate() - 100);
@@ -37,7 +66,8 @@ export class DayPageComponent implements OnInit {
   async getData(startDate: Date, endDate: Date): Promise<void> {
     this.dataMap = await this.dataService.getDataInDateRange(
       startDate,
-      endDate
+      endDate,
+      this.userID
     );
   }
 
@@ -58,7 +88,7 @@ export class DayPageComponent implements OnInit {
     const dateString = this.selectedDate.toISOString().split('T')[0];
     let exercises: ExerciseSet[] | undefined = [];
     if (this.dataMap) {
-      exercises = this.dataMap.get(dateString);
+      exercises = this.dataMap?.get(dateString);
     }
 
     if (exercises) {

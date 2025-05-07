@@ -1,7 +1,9 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   OnInit,
@@ -21,6 +23,8 @@ import { map } from 'rxjs';
 export class CalendarComponent implements OnInit {
   @ViewChild('calendar') private calendarScroll!: ElementRef;
 
+  cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
   calendarDates?: Date[];
   @Input() exerciseData?: Map<string, ExerciseSet[]>;
 
@@ -28,10 +32,6 @@ export class CalendarComponent implements OnInit {
   @Output() selectedDayChange = new EventEmitter<Date>();
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.scrollBottom();
-    }, 0);
-
     let currentDate = new Date();
     this.selectedDay = currentDate;
     let dayOfWeek = currentDate.getDay();
@@ -48,6 +48,10 @@ export class CalendarComponent implements OnInit {
       activeDate.setDate(currentDate.getDate() - i);
       this.calendarDates.push(new Date(activeDate));
     }
+
+    setTimeout(() => {
+      this.scrollBottom();
+    }, 0);
   }
 
   isSelectedDate(day: Date): boolean {

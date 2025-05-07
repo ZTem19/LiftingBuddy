@@ -4,11 +4,19 @@
       <p class="date">Date: {{ selectedDate | date : "mediumDate" }}</p>
       <button class="todaybtn" (click)="setDateToday()">Today</button>
     </div>
-    <app-calendar
-      (selectedDayChange)="changeDate($event)"
-      [(selectedDay)]="selectedDate"
-      [exerciseData]="dataMap"
-    ></app-calendar>
+    <div class="holder">
+      <app-calendar
+        (selectedDayChange)="changeDate($event)"
+        [(selectedDay)]="selectedDate"
+        [exerciseData]="dataMap"
+      ></app-calendar>
+    </div>
+  </div>
+  @if(isLoadingData){
+  <p>Loading Data</p>
+  }
+  <div class="btncontainer">
+    <button class="addworkout">Add Workout</button>
   </div>
   <div class="etable">
     <table class="exercisetable">
@@ -30,7 +38,7 @@
           </div>
           }
         </td>
-        <td>{{ exerciseSet.totalVolume }}</td>
+        <td>{{ exerciseSet.totalVolume | weightUnit : userUnits }}</td>
       </tr>
       } @empty {
       <tr>

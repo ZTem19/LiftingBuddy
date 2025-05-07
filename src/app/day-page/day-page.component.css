@@ -16,7 +16,7 @@
 
 .etable {
   background-color: #2f2f2f;
-  margin: 2em 0 2em 0;
+  margin: 1em 0 1em 0;
   padding: 0.5em;
   border-radius: 1em;
   border-top-right-radius: 2em;
@@ -48,6 +48,7 @@
   display: flex;
   justify-content: space-between;
   min-width: fit-content;
+  max-width: 45%;
   width: 45%;
 }
 
@@ -63,4 +64,28 @@
 
 .todaybtn:hover {
   scale: 105%;
+}
+
+.holder {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btncontainer {
+  width: 85%;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+
+.addworkout {
+  margin: 1em 0 0 0;
+  padding: 0.5em;
+  background-color: dimgray;
+  border: 1px solid grey;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 1em;
+  align-self: flex-end;
+  justify-self: end;
 }
