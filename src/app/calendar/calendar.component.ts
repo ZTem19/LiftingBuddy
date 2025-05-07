@@ -24,6 +24,7 @@ export class CalendarComponent implements OnInit {
   @ViewChild('calendar') private calendarScroll!: ElementRef;
 
   cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  firefoxStyle: boolean = false;
 
   calendarDates?: Date[];
   @Input() exerciseData?: Map<string, ExerciseSet[]>;
@@ -32,6 +33,13 @@ export class CalendarComponent implements OnInit {
   @Output() selectedDayChange = new EventEmitter<Date>();
 
   ngOnInit(): void {
+    //Get browser as it affects css
+    const agent = window.navigator.userAgent;
+    if (agent.toLowerCase().indexOf('firefox') > -1) {
+      this.firefoxStyle = true;
+    }
+    console.log('Agent: ' + agent);
+
     let currentDate = new Date();
     this.selectedDay = currentDate;
     let dayOfWeek = currentDate.getDay();

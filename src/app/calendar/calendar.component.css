@@ -16,11 +16,22 @@
   /* gap: 0.7em; */
   max-height: 45vh;
   overflow-y: auto;
+  overflow-x: hidden;
   /* background-color: #1b1a55; */
   background-image: linear-gradient(to bottom right, #9290c3, #070f2b);
 }
 
 .dayheader {
+  text-align: center;
+  position: sticky;
+  top: 0;
+  padding: 1em;
+  padding-bottom: 2em;
+  background-color: #070f2b;
+  color: #9290c3;
+}
+
+.ffheader {
   text-align: center;
   position: sticky;
   top: 0;
