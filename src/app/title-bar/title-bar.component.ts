@@ -5,11 +5,12 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../firebase-config';
 import { Auth } from '@angular/fire/auth';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-title-bar',
-  imports: [RouterModule, NgIf],
+  imports: [RouterModule, NgIf, MatIconModule],
   templateUrl: './title-bar.component.html',
   styleUrl: './title-bar.component.css',
 })

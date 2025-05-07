@@ -9,6 +9,11 @@
 <div *ngIf="userLoggedIn" class="titlebar d-flex">
   <p class="title">Lifting Buddy</p>
   <p class="title">Welcome, {{ auth.currentUser?.email }}</p>
+  
+  <button mat-icon-button class="no-background-button" [routerLink]="'/settings-page'" aria-label="Settings">
+    <mat-icon>settings</mat-icon>
+  </button>
+  
 </div>
 
 <!-- Your other page content -->
