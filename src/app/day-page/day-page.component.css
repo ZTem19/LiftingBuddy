@@ -20,15 +20,15 @@
   padding: 0.5em;
   border-radius: 1em;
   border-top-right-radius: 2em;
-  width: 85%;
+  width: fit-content;
   height: fit-content;
   border: 2px solid #535c91;
 }
 
 .exercisetable {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: minmax(3em, auto);
-  width: inherit;
+  width: 75dvw;
   height: inherit;
 }
 
@@ -48,7 +48,7 @@
   display: flex;
   justify-content: space-between;
   min-width: fit-content;
-  max-width: 30%;
+  max-width: 55dvw;
 }
 
 .todaybtn {
@@ -62,6 +62,7 @@
 }
 
 .todaybtn:hover {
+  background-color: #434c81;
   scale: 105%;
 }
 
@@ -71,7 +72,7 @@
 }
 
 .btncontainer {
-  width: 85%;
+  width: 55dvw;
   display: flex;
   flex-direction: row;
   justify-content: end;
@@ -91,10 +92,26 @@
 }
 
 .addworkout:hover {
+  background-color: #434c81;
   scale: 105%;
 }
 
 .loadingtext {
   color: #f0f0f0;
   margin: 1em;
+}
+
+.deletebtn {
+  margin-left: 17em;
+  background-color: #535c91;
+  border: 2px solid #9290c3;
+  color: #f0f0f0;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+.deletebtn:hover {
+  background-color: #434c81;
+  scale: 105%;
 }

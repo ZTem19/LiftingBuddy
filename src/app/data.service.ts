@@ -201,4 +201,17 @@ export class DataService implements OnInit {
 
     this.fetchService.addSetData(sets, dataRef);
   }
+
+  async deleteExerciseSet(exerciseSet: ExerciseSet): Promise<void> {
+    if (exerciseSet.sets.length == 0) {
+      throw new Error('No sets in exercise set');
+    }
+
+    const deleteSets = this.fetchService.deleteSets(exerciseSet.sets);
+
+    const deletedata = this.fetchService.deleteData(exerciseSet.sets[0].dataId);
+
+    await deleteSets;
+    await deletedata;
+  }
 }

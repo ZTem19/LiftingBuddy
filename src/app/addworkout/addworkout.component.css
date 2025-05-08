@@ -103,3 +103,8 @@
   display: flex;
   flex-direction: column;
 }
+
+.nameinput {
+  flex-grow: 1;
+  width: inherit;
+}

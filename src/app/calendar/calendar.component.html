@@ -1,4 +1,8 @@
-<div #calendar class="calendar">
+<div
+  #calendar
+  [class.calendar]="!firefoxStyle"
+  [class.ffcalendar]="firefoxStyle"
+>
   <!-- If user if using firefox switch to a different style -->
   <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Sun</p>
   <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Mon</p>
@@ -10,7 +14,8 @@
 
   @for (day of calendarDates; track $index) {
   <p
-    class="daycell"
+    [class.daycell]="!firefoxStyle"
+    [class.ffdaycell]="firefoxStyle"
     (click)="setSelectedDay(day)"
     [class.selected]="isSelectedDate(day)"
   >

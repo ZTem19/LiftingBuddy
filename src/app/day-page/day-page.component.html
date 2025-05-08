@@ -14,15 +14,15 @@
         [exerciseData]="dataMap"
       ></app-calendar>
     </div>
+    <div class="btncontainer">
+      <button class="addworkout" (click)="addingWorkout = true">
+        Add Workout
+      </button>
+    </div>
   </div>
   <!-- @if(isLoadingData){
   <h3 class="loadingtext">Loading Data</h3>
   } -->
-  <div class="btncontainer">
-    <button class="addworkout" (click)="addingWorkout = true">
-      Add Workout
-    </button>
-  </div>
   <div class="etable">
     <table class="exercisetable">
       <thead>
@@ -44,6 +44,11 @@
           }
         </td>
         <td>{{ exerciseSet.totalVolume | weightUnit : userUnits }}</td>
+        <td>
+          <button class="deletebtn" (click)="deleteWorkout(exerciseSet)">
+            Delete
+          </button>
+        </td>
       </tr>
       } @empty {
       <tr>

@@ -32,7 +32,7 @@ import { AddworkoutComponent } from '../addworkout/addworkout.component';
   templateUrl: './day-page.component.html',
   styleUrl: './day-page.component.css',
 })
-export class DayPageComponent implements OnInit, AfterContentInit {
+export class DayPageComponent implements OnInit {
   @ViewChild(CalendarComponent) calendarComponent!: CalendarComponent;
 
   dataService: DataService = inject(DataService);
@@ -72,10 +72,8 @@ export class DayPageComponent implements OnInit, AfterContentInit {
 
   toggleMenu() {
     this.addingWorkout = !this.addingWorkout;
-    this.loadData();
+    setTimeout(() => this.loadData(), 1000);
   }
-
-  ngAfterContentInit(): void {}
 
   async getData(startDate: Date, endDate: Date): Promise<void> {
     this.dataMap = await this.dataService.getDataInDateRange(
@@ -111,5 +109,11 @@ export class DayPageComponent implements OnInit, AfterContentInit {
     }
 
     return [];
+  }
+
+  async deleteWorkout(exerciseSet: ExerciseSet): Promise<void> {
+    console.log('Deleting exercise set: ' + JSON.stringify(exerciseSet));
+    await this.dataService.deleteExerciseSet(exerciseSet);
+    this.loadData();
   }
 }

@@ -8,7 +8,9 @@
 <!-- Show the logged-in navbar if the user is logged in -->
 <div *ngIf="userLoggedIn" class="titlebar d-flex">
   <p class="title">Lifting Buddy</p>
-  <p class="title">Welcome, {{ auth.currentUser?.email }}</p>
+  @if(auth.currentUser && auth.currentUser.email){
+  <p class="title">Welcome, {{ auth.currentUser.email.split("@")[0] }}</p>
+  }
 </div>
 
 <!-- Your other page content -->

@@ -562,6 +562,31 @@ export class FetchService implements OnInit {
       await doc;
     }
   }
+
+  async deleteSets(sets: eSet[]): Promise<void> {
+    const dataId = sets[0].dataId;
+    const setsQuery = query(this.setsCollection, where('dataId', '==', dataId));
+
+    const setsToDelete = (await getDocs(setsQuery)).docs.map((doc) => {
+      deleteDoc(doc.ref);
+    });
+
+    for (const set of setsToDelete) {
+      await set;
+    }
+  }
+
+  async deleteData(dataId: string): Promise<void> {
+    const dataDoc = doc(this.firestore, 'data', dataId.trim());
+    const dataRef = await getDoc(dataDoc);
+    if (dataRef.exists()) {
+      deleteDoc(dataRef.ref);
+    } else {
+      console.log(
+        'Error data document does not exist: ' + JSON.stringify(dataRef.data())
+      );
+    }
+  }
 }
 
 interface DocData {
