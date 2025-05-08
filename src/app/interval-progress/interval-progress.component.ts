@@ -64,7 +64,7 @@ export class IntervalProgressComponent {
     }
 
     // calculate final day
-    const finalDay: Date = addDays(parsedStartDate, (parsedNumOfDays * parsedNumOfIntervals))
+    const finalDay: Date = addDays(parsedStartDate, (parsedNumOfDays * parsedNumOfIntervals) - 1)
     
     // Ensure the end date is today or earlier
     if (finalDay > today) {

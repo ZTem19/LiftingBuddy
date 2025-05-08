@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, ElementRef, ViewChild, OnChanges } from '@angular/core';
+import { Component, Input, AfterViewInit, ElementRef, ViewChild, OnChanges} from '@angular/core';
 import { IntervalServiceService } from '../interval-service.service';
 import { MuscleGroup } from '../../data types/data-types';
 import {
