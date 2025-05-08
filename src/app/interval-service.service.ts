@@ -8,13 +8,14 @@ import {
   ExerciseSet,
   MuscleGroupProgress,
 } from '../data types/data-types';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IntervalServiceService {
   test_user_id = "3k7dINFrSssLj0qq8TqF";
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private authService: AuthService) {}
 
   // Gets map with muscle group and its total volume in interval
   public async GetVolumeMuscleGroup(startDate: Date, endDate: Date): Promise<Map<number, number>> {
@@ -118,7 +119,7 @@ export class IntervalServiceService {
     for (let i = 0; i < numberOfIntervals; i++) {
       let intervalEndDate: Date = addDays(
         intervalStartDate,
-        numberOfDaysPerInterval - 1
+        numberOfDaysPerInterval
       );
 
       // get volume for each muscle group in this interval

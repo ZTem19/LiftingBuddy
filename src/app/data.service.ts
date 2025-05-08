@@ -10,7 +10,6 @@ import { of, Observable, forkJoin, mapTo } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FetchService } from './fetch.service';
 import * as exercises from '../exercises.json';
-import { User } from '../data types/data-types';
 import { Auth, user } from '@angular/fire/auth';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
@@ -24,31 +23,49 @@ export class DataService implements OnInit {
   private dataMap: Map<string, ExerciseSet[]> = new Map();
   private userId?: string | null;
   private fetchService: FetchService = inject(FetchService);
-
-  private userSubscription?: Subscription;
-  private auth = inject(Auth);
   private authService = inject(AuthService);
+  // checks if we have tried to retrieve user id so we do not keep looking for it if it does not exist
+  private userIdReady: Promise<string> | null = null;
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {
-    this.getUserId();
-
+  async ngOnInit(): Promise<void> {
+    let resolvedUserId = ""
+    try
+    {
+       resolvedUserId = await this.ensureUserId();
+    }
+    catch
+    {
+      return;
+    }
+   
     // Get workout history for the last 3 months
     const currentDate = new Date();
     const past = new Date();
     past.setDate(currentDate.getDate() - 90);
-    this.populateDateMap(past, currentDate);
+    this.populateDateMap(past, currentDate, resolvedUserId);
   }
 
-  private async getUserId() {
-    let user = await firstValueFrom(this.authService.user);
-    if (user == null) {
-      this.router.navigate(['login-page']);
-    } else {
-      this.userId = user.id;
+  // async function to ensure user has the id needed for calling in methods
+  private async ensureUserId(): Promise<string> 
+  {
+    if (this.userId) return this.userId;
+
+    if (!this.userIdReady) {
+      this.userIdReady = (async () => {
+        const user = await firstValueFrom(this.authService.user);
+        if (!user) {
+          this.router.navigate(['login-page']);
+          throw new Error('User not logged in');
+        }
+        this.userId = user.id;
+        return user.id;
+      })();
     }
-  }
+
+    return this.userIdReady;
+}
 
   resetDataMap() {
     this.dataMap = new Map();
@@ -56,9 +73,10 @@ export class DataService implements OnInit {
 
   async getExerciseSetsForDay(
     day: Date,
-    userId: string = this.userId ?? '12345'
+    userId?: string
   ): Promise<ExerciseSet[]> {
-    console.log(this.userId);
+    const resolvedUserId = userId ?? await this.ensureUserId();
+    console.log(resolvedUserId);
     const key = day.toISOString().slice(0, 10);
     // If cached return immediately
     if (this.dataMap.has(key)) {
@@ -69,7 +87,7 @@ export class DataService implements OnInit {
     try {
       // retrieve exercise sets for day from fetch service
       const exerciseSets = await this.fetchService.getExerciseSetDataForDay(
-        userId,
+        resolvedUserId,
         day
       );
       // Cache the result
@@ -84,8 +102,9 @@ export class DataService implements OnInit {
   async preloadMonthSets(
     year: number,
     month: number,
-    userId: string = this.userId ?? '12345'
+    userId?: string 
   ): Promise<void> {
+    const resolvedUserId = userId ?? await this.ensureUserId();
     // Gets all days for the month and adds them to array
     const start = new Date(year, month, 1);
     const end = new Date(year, month + 1, 0);
@@ -98,7 +117,7 @@ export class DataService implements OnInit {
 
     // Runs the getExerciseSetsForDay based on userId and day many times in parralel
     await Promise.all(
-      days.map((day) => this.getExerciseSetsForDay(day, userId))
+      days.map((day) => this.getExerciseSetsForDay(day, resolvedUserId))
     );
   }
 
@@ -133,13 +152,14 @@ export class DataService implements OnInit {
   async getDataInDateRange(
     startDate: Date,
     endDate: Date,
-    userId: string = this.userId ?? '12345'
+    userId?: string
   ): Promise<Map<string, ExerciseSet[]>> {
+    const resolvedUserId = userId ?? await this.ensureUserId();
     if (
       !this.dataMap.has(this.getDateString(startDate)) ||
       !this.dataMap.has(this.getDateString(endDate))
     ) {
-      await this.populateDateMap(startDate, endDate, userId);
+      await this.populateDateMap(startDate, endDate, resolvedUserId);
     }
     return this.dataMap;
   }
@@ -151,11 +171,12 @@ export class DataService implements OnInit {
   private async populateDateMap(
     startDate: Date,
     endDate: Date,
-    userId: string = this.userId ?? '12345'
+    userId?: string
   ): Promise<void> {
+    const resolvedUserId = userId ?? await this.ensureUserId();
     console.log('Getting data from fetch service. ');
     this.dataMap = await this.fetchService.getExerciseSetsInDateRange(
-      userId,
+      resolvedUserId,
       startDate,
       endDate
     );
@@ -172,7 +193,6 @@ export class DataService implements OnInit {
     userId: string,
     date: Date
   ): Promise<void> {
-    // Get exercise id
     // Add exercise if not in exercise collection
     let exerciseId: string = '';
     if (exercise.id.trim() == '') {
