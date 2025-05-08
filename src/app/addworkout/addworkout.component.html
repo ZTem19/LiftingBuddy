@@ -1,0 +1,118 @@
+<div class="overlay">
+  <div class="menu">
+    <div class="topbar">
+      <h3>{{ selectedDate | date }} | Add Workout</h3>
+      <button class="menubtn" (click)="closeMenu()">Close</button>
+    </div>
+    <hr />
+    <div class="formcontainer">
+      <div>
+        <form class="form" (ngSubmit)="addWorkout()" name="workoutForm">
+          <div class="formrow">
+            <label for="">Exercise:</label>
+            <select
+              [(ngModel)]="selectedExercise"
+              name="exercise"
+              class="select"
+              [disabled]="addingExercise"
+            >
+              <option [ngValue]="selectExercisePlaceHolder" disabled selected>
+                Select an Exercise
+              </option>
+              @for(exercise of exercises; track exercise){
+              <option [ngValue]="exercise">{{ exercise.name }}</option>
+              }
+            </select>
+            <button class="menubtn" (click)="toggleAddExercise()" type="button">
+              @if(addingExercise){ Cancel }@else { Add Exercise }
+            </button>
+          </div>
+          @if(addingExercise){
+          <div class="formrow">
+            <input
+              type="text"
+              placeholder="Exercise Name"
+              class="select nameinput"
+              required
+              name="exerciseName"
+              [(ngModel)]="exerciseName"
+            />
+            <select
+              name="exerciseMuscleGroup"
+              id=""
+              class="select"
+              required
+              [(ngModel)]="exerciseMGroup"
+            >
+              <option disabled selected>Muscle Group</option>
+              @for(mGroup of getMuscleGroups(); track mGroup[0]){
+              <option [ngValue]="">{{ mGroup[0] }}</option>
+              }
+            </select>
+          </div>
+          <div class="formrow">
+            <input
+              type="text"
+              placeholder="Exercise Description"
+              class="select descriptionbox"
+              name="exerciseDescription"
+              required
+              [(ngModel)]="exerciseDes"
+            />
+          </div>
+          }
+          <div class="formrow">
+            <label for="">Number of sets:</label>
+            <select
+              name=""
+              id=""
+              class="select"
+              #setsSelect
+              (change)="setNumOfSets(setsSelect.value)"
+              required
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+          @for(set of sets; track set.dataId; let i = $index){
+          <div class="formrow setrow">
+            <label for="">Reps:</label>
+            <input
+              [(ngModel)]="sets[i].numOfReps"
+              type="number"
+              name="numOfReps"
+              id=""
+              class="select"
+              placeholder="0"
+              required
+            />
+          </div>
+          <div class="formrow setrow">
+            <label for="">Weight:</label>
+            <input
+              [(ngModel)]="sets[i].weight"
+              type="number"
+              name="weight"
+              id=""
+              class="select"
+              placeholder="0"
+              required
+            />
+          </div>
+          }
+          <div class="bottombar">
+            @if(entryError){
+            <p class="errormessage" style="color: red">{{ errorMsg }}</p>
+            }
+            <button class="menubtn" type="submit">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

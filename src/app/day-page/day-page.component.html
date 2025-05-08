@@ -1,15 +1,28 @@
 <div class="page w-100">
+  @if(addingWorkout){
+  <app-addworkout (close)="toggleMenu()" [selectedDate]="selectedDate" />
+  }
   <div>
     <div class="datebar">
       <p class="date">Date: {{ selectedDate | date : "mediumDate" }}</p>
       <button class="todaybtn" (click)="setDateToday()">Today</button>
     </div>
-    <app-calendar
-      (selectedDayChange)="changeDate($event)"
-      [(selectedDay)]="selectedDate"
-      [exerciseData]="dataMap"
-    ></app-calendar>
+    <div class="holder">
+      <app-calendar
+        (selectedDayChange)="changeDate($event)"
+        [(selectedDay)]="selectedDate"
+        [exerciseData]="dataMap"
+      ></app-calendar>
+    </div>
+    <div class="btncontainer">
+      <button class="addworkout" (click)="addingWorkout = true">
+        Add Workout
+      </button>
+    </div>
   </div>
+  <!-- @if(isLoadingData){
+  <h3 class="loadingtext">Loading Data</h3>
+  } -->
   <div class="etable">
     <table class="exercisetable">
       <thead>
@@ -30,7 +43,12 @@
           </div>
           }
         </td>
-        <td>{{ exerciseSet.totalVolume }}</td>
+        <td>{{ exerciseSet.totalVolume | weightUnit : userUnits }}</td>
+        <td>
+          <button class="deletebtn" (click)="deleteWorkout(exerciseSet)">
+            Delete
+          </button>
+        </td>
       </tr>
       } @empty {
       <tr>

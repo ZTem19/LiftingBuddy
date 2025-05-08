@@ -4,16 +4,18 @@ import {
   Exercise,
   eSet as DataSet,
   ExerciseSet,
+  eSet,
 } from '../data types/data-types';
 import { of, Observable, forkJoin, mapTo } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FetchService } from './fetch.service';
 import * as exercises from '../exercises.json';
 import { User } from '../data types/data-types';
-import { Auth } from '@angular/fire/auth';
+import { Auth, user } from '@angular/fire/auth';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import { getEffortFactor } from '../utils/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -29,10 +31,9 @@ export class DataService implements OnInit {
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void 
-  {
+  ngOnInit(): void {
     this.getUserId();
-    
+
     // Get workout history for the last 3 months
     const currentDate = new Date();
     const past = new Date();
@@ -40,24 +41,23 @@ export class DataService implements OnInit {
     this.populateDateMap(past, currentDate);
   }
 
-  private async getUserId() 
-  {
-      let user = await firstValueFrom(this.authService.user);
-      if (user == null) {
-        this.router.navigate(['login-page']);
-      } 
-      else 
-      {
-        this.userId = user.id;
-      }
+  private async getUserId() {
+    let user = await firstValueFrom(this.authService.user);
+    if (user == null) {
+      this.router.navigate(['login-page']);
+    } else {
+      this.userId = user.id;
+    }
   }
 
-  resetDataMap()
-  {
+  resetDataMap() {
     this.dataMap = new Map();
   }
 
-  async getExerciseSetsForDay(day: Date,userId: string = this.userId ?? "12345"): Promise<ExerciseSet[]> {
+  async getExerciseSetsForDay(
+    day: Date,
+    userId: string = this.userId ?? '12345'
+  ): Promise<ExerciseSet[]> {
     console.log(this.userId);
     const key = day.toISOString().slice(0, 10);
     // If cached return immediately
@@ -81,7 +81,11 @@ export class DataService implements OnInit {
   }
 
   // Caches a single month to make data retrieval faster, will probably use current month and possibly some before as well
-  async preloadMonthSets(year: number, month: number, userId: string = this.userId ?? "12345"): Promise<void> {
+  async preloadMonthSets(
+    year: number,
+    month: number,
+    userId: string = this.userId ?? '12345'
+  ): Promise<void> {
     // Gets all days for the month and adds them to array
     const start = new Date(year, month, 1);
     const end = new Date(year, month + 1, 0);
@@ -126,7 +130,11 @@ export class DataService implements OnInit {
     return map;
   }
 
-  async getDataInDateRange(startDate: Date, endDate: Date, userId: string = this.userId ?? "12345"): Promise<Map<string, ExerciseSet[]>> {
+  async getDataInDateRange(
+    startDate: Date,
+    endDate: Date,
+    userId: string = this.userId ?? '12345'
+  ): Promise<Map<string, ExerciseSet[]>> {
     if (
       !this.dataMap.has(this.getDateString(startDate)) ||
       !this.dataMap.has(this.getDateString(endDate))
@@ -140,15 +148,70 @@ export class DataService implements OnInit {
     return this.fetchService.getAllExercises();
   }
 
-  private async populateDateMap(startDate: Date, endDate: Date, userId: string = this.userId ?? "12345"): Promise<void> {
+  private async populateDateMap(
+    startDate: Date,
+    endDate: Date,
+    userId: string = this.userId ?? '12345'
+  ): Promise<void> {
+    console.log('Getting data from fetch service. ');
     this.dataMap = await this.fetchService.getExerciseSetsInDateRange(
       userId,
       startDate,
       endDate
     );
+    console.log('Got data from fetch service. ');
   }
 
   private getDateString(date: Date): string {
     return date.toISOString().split('T')[0];
+  }
+
+  async addWorkout(
+    exercise: Exercise,
+    sets: eSet[],
+    userId: string,
+    date: Date
+  ): Promise<void> {
+    // Get exercise id
+    // Add exercise if not in exercise collection
+    let exerciseId: string = '';
+    if (exercise.id.trim() == '') {
+      exerciseId = await this.fetchService.addExercise(
+        exercise.name,
+        exercise.muscleGroup,
+        exercise.description
+      );
+    } else {
+      exerciseId = exercise.id;
+    }
+
+    // Calculate total volume
+    let totalvolume = 0;
+    for (const set of sets) {
+      const effortFactor = getEffortFactor(set.numOfReps);
+      totalvolume += Math.floor(set.numOfReps * set.weight * effortFactor);
+    }
+
+    const dataRef = await this.fetchService.addExerciseData(
+      exerciseId,
+      totalvolume,
+      userId,
+      date
+    );
+
+    this.fetchService.addSetData(sets, dataRef);
+  }
+
+  async deleteExerciseSet(exerciseSet: ExerciseSet): Promise<void> {
+    if (exerciseSet.sets.length == 0) {
+      throw new Error('No sets in exercise set');
+    }
+
+    const deleteSets = this.fetchService.deleteSets(exerciseSet.sets);
+
+    const deletedata = this.fetchService.deleteData(exerciseSet.sets[0].dataId);
+
+    await deleteSets;
+    await deletedata;
   }
 }

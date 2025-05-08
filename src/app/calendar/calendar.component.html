@@ -1,15 +1,21 @@
-<div #calendar class="calendar">
-  <p class="dayheader">Sun</p>
-  <p class="dayheader">Mon</p>
-  <p class="dayheader">Tues</p>
-  <p class="dayheader">Wed</p>
-  <p class="dayheader">Thrus</p>
-  <p class="dayheader">Fri</p>
-  <p class="dayheader">Sat</p>
+<div
+  #calendar
+  [class.calendar]="!firefoxStyle"
+  [class.ffcalendar]="firefoxStyle"
+>
+  <!-- If user if using firefox switch to a different style -->
+  <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Sun</p>
+  <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Mon</p>
+  <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Tues</p>
+  <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Wed</p>
+  <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Thrus</p>
+  <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Fri</p>
+  <p [class.dayheader]="!firefoxStyle" [class.ffheader]="firefoxStyle">Sat</p>
 
   @for (day of calendarDates; track $index) {
   <p
-    class="daycell"
+    [class.daycell]="!firefoxStyle"
+    [class.ffdaycell]="firefoxStyle"
     (click)="setSelectedDay(day)"
     [class.selected]="isSelectedDate(day)"
   >

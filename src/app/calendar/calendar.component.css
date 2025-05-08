@@ -1,3 +1,5 @@
+/* Two different style for firefox and other broswers as firefox handles the calendar styling differently  */
+
 .page {
   background-color: #070f2b;
   padding: 1em;
@@ -6,16 +8,33 @@
 .calendar {
   border: 4px solid #535c91;
   border-radius: 0.5em;
-  max-width: 45%;
-  width: auto;
+  width: 55dvw;
   min-width: fit-content;
   /* padding: 0em 1em 1em 1em; */
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: minmax(3em, auto);
+  grid-auto-rows: minmax(5em, 1em);
   /* gap: 0.7em; */
-  max-height: 45vh;
+  max-height: 55dvh;
   overflow-y: auto;
+  overflow-x: hidden;
+  /* background-color: #1b1a55; */
+  background-image: linear-gradient(to bottom right, #9290c3, #070f2b);
+}
+
+.ffcalendar {
+  border: 4px solid #535c91;
+  border-radius: 0.5em;
+  width: 55dvw;
+  min-width: fit-content;
+  /* padding: 0em 1em 1em 1em; */
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(1em, auto);
+  /* gap: 0.7em; */
+  max-height: 55dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
   /* background-color: #1b1a55; */
   background-image: linear-gradient(to bottom right, #9290c3, #070f2b);
 }
@@ -25,11 +44,31 @@
   position: sticky;
   top: 0;
   padding: 1em;
+  padding-bottom: 2em;
+  background-color: #070f2b;
+  color: #9290c3;
+}
+
+.ffheader {
+  text-align: center;
+  position: sticky;
+  top: 0;
+  padding: 1em;
   background-color: #070f2b;
   color: #9290c3;
 }
 
 .daycell {
+  text-align: center;
+  padding: 1em;
+  aspect-ratio: 1 / 1;
+  color: #f0f0f0;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ffdaycell {
   text-align: center;
   padding: 1em;
   aspect-ratio: 1 / 1;
