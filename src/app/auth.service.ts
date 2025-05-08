@@ -57,6 +57,13 @@ export class AuthService implements OnInit {
 
   ngOnInit(): void {}
 
+  getUserId(): string {
+    if (this.userSubject.value) {
+      return this.userSubject.value.id;
+    }
+    throw new Error('No user signed in unable to get id.');
+  }
+
   userSignedIn(): boolean {
     if (this.userSubject.value == null) {
       return false;

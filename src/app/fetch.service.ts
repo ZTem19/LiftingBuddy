@@ -397,11 +397,6 @@ export class FetchService implements OnInit {
     return map;
   }
 
-  // this.dataCollection,
-  // where('userId', '==', userId),
-  // where('date', '>=', Timestamp.fromDate(startOfDay)),
-  // where('date', '<=', Timestamp.fromDate(endOfDay))
-
   async getExerciseSetsInDateRange(
     userId: string,
     startDate: Date,
@@ -533,6 +528,39 @@ export class FetchService implements OnInit {
   private printMap(map: Map<any, any>) {
     const obj = Object.fromEntries(map);
     console.log(JSON.stringify(obj, null, 2));
+  }
+
+  async addExerciseData(
+    exerciseId: string,
+    totalvolume: number,
+    userId: string,
+    date: Date
+  ): Promise<string> {
+    const dataRef = await addDoc(this.dataCollection, {
+      date: Timestamp.fromDate(date),
+      exerciseId: exerciseId,
+      totalVolume: totalvolume,
+      userId: userId,
+    });
+
+    return dataRef.id;
+  }
+
+  async addSetData(sets: eSet[], dataId: string): Promise<void> {
+    const setDocs = [];
+    for (const set of sets) {
+      setDocs.push(
+        addDoc(this.setsCollection, {
+          dataId: dataId,
+          reps: set.numOfReps,
+          weight: set.weight,
+        })
+      );
+    }
+
+    for (const doc of setDocs) {
+      await doc;
+    }
   }
 }
 

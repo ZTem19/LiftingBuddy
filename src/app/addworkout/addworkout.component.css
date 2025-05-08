@@ -21,6 +21,7 @@
   background-image: linear-gradient(to bottom right, dimgrey, black);
 
   width: 35dvw;
+  min-width: fit-content;
   height: fit-content;
 }
 
@@ -63,6 +64,7 @@
   display: flex;
   margin: 0.5em;
   width: inherit;
+  justify-content: space-between;
 }
 
 .formrow * {
@@ -76,10 +78,25 @@
   border-radius: 0.5em;
 }
 
+.descriptionbox {
+  width: inherit;
+  flex-grow: 1;
+  height: 2em;
+  overflow-y: auto;
+}
+
 .bottombar {
   display: flex;
   margin: 0.5em;
   justify-content: end;
+}
+
+.errormessage {
+  color: red;
+  justify-self: start;
+  align-self: flex-start;
+  flex-grow: 1;
+  /* margin: 0 2em 0 2em; */
 }
 
 .formcontainer {

@@ -4,6 +4,7 @@ import {
   Exercise,
   eSet as DataSet,
   ExerciseSet,
+  eSet,
 } from '../data types/data-types';
 import { of, Observable, forkJoin, mapTo } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -14,6 +15,7 @@ import { Auth, user } from '@angular/fire/auth';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import { getEffortFactor } from '../utils/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -162,5 +164,41 @@ export class DataService implements OnInit {
 
   private getDateString(date: Date): string {
     return date.toISOString().split('T')[0];
+  }
+
+  async addWorkout(
+    exercise: Exercise,
+    sets: eSet[],
+    userId: string,
+    date: Date
+  ): Promise<void> {
+    // Get exercise id
+    // Add exercise if not in exercise collection
+    let exerciseId: string = '';
+    if (exercise.id.trim() == '') {
+      exerciseId = await this.fetchService.addExercise(
+        exercise.name,
+        exercise.muscleGroup,
+        exercise.description
+      );
+    } else {
+      exerciseId = exercise.id;
+    }
+
+    // Calculate total volume
+    let totalvolume = 0;
+    for (const set of sets) {
+      const effortFactor = getEffortFactor(set.numOfReps);
+      totalvolume += Math.floor(set.numOfReps * set.weight * effortFactor);
+    }
+
+    const dataRef = await this.fetchService.addExerciseData(
+      exerciseId,
+      totalvolume,
+      userId,
+      date
+    );
+
+    this.fetchService.addSetData(sets, dataRef);
   }
 }

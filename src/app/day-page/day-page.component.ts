@@ -37,7 +37,6 @@ export class DayPageComponent implements OnInit, AfterContentInit {
 
   dataService: DataService = inject(DataService);
   userService: AuthService = inject(AuthService);
-  changesRef: ChangeDetectorRef = inject(ChangeDetectorRef);
   router: Router = inject(Router);
 
   userUnits: boolean = true;
@@ -52,28 +51,31 @@ export class DayPageComponent implements OnInit, AfterContentInit {
   ngOnInit(): void {
     this.dataService.ngOnInit();
     this.isLoadingData = true;
-    this.dataService.getAllExercises().subscribe((exercises) => {
-      this.exerciseList = exercises;
-    });
-
     this.userService.user.subscribe((u) => {
       if (u != null) {
         this.userUnits = u.units == 'lbs' ? true : false;
         this.userID = u.id;
       }
     });
+    this.loadData();
   }
 
-  toggleMenu() {
-    this.addingWorkout = !this.addingWorkout;
-  }
-
-  ngAfterContentInit(): void {
+  loadData(): void {
+    this.dataService.getAllExercises().subscribe((exercises) => {
+      this.exerciseList = exercises;
+    });
     const currentDate = new Date();
     const past = new Date();
     past.setDate(currentDate.getDate() - 100);
     this.getData(past, currentDate);
   }
+
+  toggleMenu() {
+    this.addingWorkout = !this.addingWorkout;
+    this.loadData();
+  }
+
+  ngAfterContentInit(): void {}
 
   async getData(startDate: Date, endDate: Date): Promise<void> {
     this.dataMap = await this.dataService.getDataInDateRange(
