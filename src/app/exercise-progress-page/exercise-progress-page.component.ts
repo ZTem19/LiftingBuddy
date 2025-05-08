@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  OnInit,
+} from '@angular/core';
 import {
   Chart,
   LineController,
@@ -11,6 +17,10 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { ExerciseSet, User } from '../../data types/data-types';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { FetchService } from '../fetch.service';
 
 Chart.register(
   LineController,
@@ -26,19 +36,32 @@ Chart.register(
 @Component({
   selector: 'app-exercise-progress-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './exercise-progress-page.component.html',
-  styleUrl: './exercise-progress-page.component.css',
+  styleUrls: ['./exercise-progress-page.component.css'],
 })
-export class ExerciseProgressPageComponent implements AfterViewInit {
-  @ViewChild('myChartCanvas') myChartCanvas!: ElementRef<HTMLCanvasElement>;
+export class ExerciseProgressPageComponent implements OnInit, AfterViewInit {
+  @ViewChild('exerciseChartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
   chart!: Chart;
 
-  // Sample exercises
-  exercises: string[] = ['Push-ups', 'Running', 'Squats', 'Cycling', 'Plank'];
+  usePounds: boolean = false;
+  exercises: { id: string; name: string }[] = [];
+  workoutData = new Map<string, ExerciseSet[]>();
+
+  constructor(
+    private fetchService: FetchService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    const user: User | null = this.authService.getUserSync();
+    if (user?.units === 'lbs') {
+      this.usePounds = true;
+    }
+  }
 
   ngAfterViewInit(): void {
-    const ctx = this.myChartCanvas.nativeElement.getContext('2d');
+    const ctx = this.chartCanvas.nativeElement.getContext('2d');
     if (!ctx) {
       console.error('Canvas context is null');
       return;
@@ -50,7 +73,7 @@ export class ExerciseProgressPageComponent implements AfterViewInit {
         labels: [],
         datasets: [
           {
-            label: 'Exercise Progress',
+            label: 'Avg Weight Progress',
             data: [],
             borderColor: 'blue',
             fill: false,
@@ -69,9 +92,10 @@ export class ExerciseProgressPageComponent implements AfterViewInit {
           tooltip: {
             callbacks: {
               label: (context) => {
-                const unit =
+                const title =
                   (context.chart.options.scales?.['y'] as any)?.title?.text ||
                   '';
+                const unit = title.match(/\((.*?)\)/)?.[1] || '';
                 return `${context.dataset.label}: ${context.raw} ${unit}`;
               },
             },
@@ -82,7 +106,7 @@ export class ExerciseProgressPageComponent implements AfterViewInit {
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Progress',
+              text: `Total Volume (${this.usePounds ? 'lbs' : 'kg'})`,
             },
           },
         },
@@ -90,78 +114,134 @@ export class ExerciseProgressPageComponent implements AfterViewInit {
     });
   }
 
-  retrieveStatistics(): void {
+  private getDateKey(date: Date): string {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0); // clear time
+
+    // Generate YYYY-MM-DD in local time
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private convertVolume(volume: number): number {
+    return this.usePounds ? Math.round(volume / 0.453592) : volume;
+  }
+
+  async retrieveExerciseStatistics(): Promise<void> {
     const startDateInput = (
-      document.getElementById('start-date') as HTMLInputElement
+      document.getElementById('exercise-start-date') as HTMLInputElement
     ).value;
     const endDateInput = (
-      document.getElementById('end-date') as HTMLInputElement
-    ).value;
-    const selectedExercise = (
-      document.getElementById('exercise-select') as HTMLSelectElement
+      document.getElementById('exercise-end-date') as HTMLInputElement
     ).value;
 
-    if (!startDateInput || !endDateInput || !selectedExercise) {
-      alert('Please provide valid inputs.');
+    if (!startDateInput || !endDateInput) {
+      alert('Please provide valid dates.');
       return;
     }
 
     const startDate = new Date(startDateInput);
     const endDate = new Date(endDateInput);
-    const daysDiff =
-      (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) + 1;
 
-    if (daysDiff <= 0) {
+    if (endDate < startDate) {
       alert('End date must be after start date.');
       return;
     }
 
+    const user: User | null = this.authService.getUserSync();
+    if (!user) {
+      alert('User not authenticated.');
+      return;
+    }
+
+    this.workoutData = await this.fetchService.getExerciseSetsInDateRange(
+      user.id,
+      startDate,
+      endDate
+    );
+
+    const seen = new Map<string, string>();
+    for (const sets of this.workoutData.values()) {
+      for (const set of sets) {
+        const ex = set.exercise;
+        if (ex?.id && ex.name && !seen.has(ex.id)) {
+          seen.set(ex.id, ex.name);
+        }
+      }
+    }
+
+    this.exercises = Array.from(seen.entries()).map(([id, name]) => ({
+      id,
+      name,
+    }));
+  }
+
+  async onExerciseChange(event: Event): Promise<void> {
+    const select = event.target as HTMLSelectElement;
+    if (!select?.value) return;
+
+    const selectedExerciseId = select.value;
+
+    const startDateInput = (
+      document.getElementById('exercise-start-date') as HTMLInputElement
+    ).value;
+    const endDateInput = (
+      document.getElementById('exercise-end-date') as HTMLInputElement
+    ).value;
+
+    const startDate = new Date(startDateInput);
+    const endDate = new Date(endDateInput);
+
     const labels: string[] = [];
     const data: number[] = [];
 
-    // Determine Y-axis unit based on exercise
-    let yAxisLabel = 'Progress';
+    let current = new Date(startDate);
+    while (current <= endDate) {
+      const dateStr = current.toISOString().split('T')[0];
+      const sets = this.workoutData.get(dateStr) || [];
 
-    for (let i = 0; i < daysDiff; i++) {
-      const date = new Date(startDate);
-      date.setDate(startDate.getDate() + i);
-      labels.push(date.toISOString().split('T')[0]);
+      // Extract only matching sets for the selected exercise
+      const matchingSets = sets.filter(
+        (set) => set.exercise?.id === selectedExerciseId
+      );
 
-      let value = 0;
-      switch (selectedExercise) {
-        case 'Push-ups':
-          value = Math.floor(Math.random() * 30) + 10;
-          yAxisLabel = 'Reps';
-          break;
-        case 'Running':
-          value = Math.floor(Math.random() * 5) + 1;
-          yAxisLabel = 'Kilometers';
-          break;
-        case 'Squats':
-          value = Math.floor(Math.random() * 50) + 20;
-          yAxisLabel = 'Reps';
-          break;
-        case 'Cycling':
-          value = Math.floor(Math.random() * 15) + 5;
-          yAxisLabel = 'Kilometers';
-          break;
-        case 'Plank':
-          value = Math.floor(Math.random() * 120) + 30;
-          yAxisLabel = 'Seconds';
-          break;
-        default:
-          value = Math.floor(Math.random() * 100);
-          yAxisLabel = 'Progress';
+      let totalWeight = 0;
+      let setCount = 0;
+
+      for (const setGroup of matchingSets) {
+        if (Array.isArray(setGroup.sets)) {
+          for (const s of setGroup.sets) {
+            totalWeight += s.weight || 0;
+            setCount++;
+          }
+        }
       }
 
-      data.push(value);
+      const avgWeight =
+        setCount > 0 ? this.convertVolume(totalWeight / setCount) : 0;
+
+      labels.push(dateStr);
+      data.push(avgWeight);
+
+      current.setDate(current.getDate() + 1);
     }
 
-    // Update chart with new labels, data, and Y-axis title
-    (this.chart.options.scales as any).y.title.text = yAxisLabel;
+    const selectedExerciseName =
+      this.exercises.find((e) => e.id === selectedExerciseId)?.name ??
+      'Exercise';
+
+    const yAxis = this.chart.options.scales?.['y'] as any;
+    if (yAxis && yAxis.title) {
+      yAxis.title.text = `Average Weight per Set (${
+        this.usePounds ? 'lbs' : 'kg'
+      })`;
+    }
+
     this.chart.data.labels = labels;
-    this.chart.data.datasets[0].label = `${selectedExercise} Progress`;
+    this.chart.data.datasets[0].label = `${selectedExerciseName} Avg Weight`;
     this.chart.data.datasets[0].data = data;
-    this.chart.update();
+    this.chart.update('none');
   }
 }

@@ -8,26 +8,27 @@
       <input type="date" id="start-date" name="startDate" />
     </div>
 
-    <!-- Muscle Group Dropdown -->
-    <div class="date-picker">
-      <label for="muscle-select">Muscle Group:</label>
-      <select id="muscle-select" class="muscle-dropdown">
-        <option *ngFor="let muscle of muscleGroups" [value]="muscle">
-          {{ muscle }}
-        </option>
-      </select>
-    </div>
-
     <!-- End Date -->
     <div class="date-picker">
       <label for="end-date">End Date:</label>
       <input type="date" id="end-date" name="endDate" />
     </div>
+
+     <button (click)="retrieveStatistics()" class="btn btn-primary">
+    Load Muscle Groups
+  </button>
   </div>
 
-  <br />
+  <br /><br />
 
-  <button (click)="retrieveStatistics()" class="btn btn-primary">Submit</button>
+  <div class="date-picker">
+    <label for="muscle-select">Muscle Group:</label>
+    <select id="muscle-select" class="muscle-dropdown" (change)="onMuscleGroupChange($event)">
+      <option *ngFor="let muscle of muscleGroups" [value]="muscle.value">
+        {{ muscle.label }}
+      </option>
+    </select>
+  </div>
 
   <br /><br />
 
