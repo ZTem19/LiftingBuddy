@@ -1,59 +1,61 @@
 # LiftingBuddy
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.7.
+Tired of tracking your workouts in a notebook?  
+Want to visualize your progress over time?  
+Workout in three-day splits? No problem.
 
-## Development server
+**LiftingBuddy** is here to give you strength and ease in tracking and managing your workouts.
 
-To start a local development server, run:
+## 💪 Features
 
-```bash
+- Add, remove, and view workouts with just a few clicks
+- Visualize progress in specific muscle groups or exercises
+- Track cumulative stats across custom time intervals
+- Maintain consistent splits and routines with a streamlined interface
+- Easily review past sessions and performance history
+- Secure account-based workout storage
+
+Simple to use, intuitive to navigate, and built with lifters in mind.
+
+## 🛠️ Dev Info
+
+LiftingBuddy is built using:
+
+- **Angular** – modern, reactive front-end framework
+- **Firebase** – Google's platform for real-time data syncing and secure user authentication
+- **Firestore** – cloud database for storing user workout logs
+- **Angular Material** – clean and responsive UI components
+
+## 🚀 Getting Started
+
+Clone the repository:
+
+```
+git clone https://github.com/ZTem19/LiftingBuddy.git
+cd LiftingBuddy
+```
+Install dependencies:
+```
+npm install
+```
+Run the app locally:
+```
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+You will need to make and configure your own firebaseapi.ts file in the root 
+of the directory to connect to your own Firebase
 
-## Code scaffolding
+## 🔒 Security
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+All workout data is securely stored using Firebase Authentication and Firestore. Only you can see your progress.
 
-```bash
-ng generate component component-name
-```
+## 🙌 Contributors
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- ZTem19  
+- Evansmr225  
+- Braxtonboe05  
+- JoshPfaff  
+---
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Stay strong, stay consistent — let **LiftingBuddy** spot you through your fitness journey!
