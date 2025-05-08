@@ -11,6 +11,9 @@
   @if(auth.currentUser && auth.currentUser.email){
   <p class="title">Welcome, {{ auth.currentUser.email.split("@")[0] }}</p>
   }
+  <button mat-icon-button class="no-background-button" [routerLink]="'/settings-page'" aria-label="Settings">
+    <mat-icon>settings</mat-icon>
+  </button>
 </div>
 
 <!-- Your other page content -->

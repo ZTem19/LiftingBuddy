@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../firebase-config';
@@ -10,6 +10,7 @@ import { AuthService } from '../auth.service';
 import { firstValueFrom } from 'rxjs';
 import { DataService } from '../data.service';
 import { User } from '../../data types/data-types';
+
 
 @Component({
   selector: 'app-settings-page',
