@@ -49,6 +49,6 @@ export class NavbarComponent implements OnInit {
     ['Interval Progress', 'interval-progress'],
     ['Exercise Progress', 'exercise-progress-page'],
     ['Muscle Group Progress', 'muscle-group-progress-page'],
-    ['Settings', 'settings-page'],
+    //['Settings', 'settings-page'],
   ];
 }
