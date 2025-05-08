@@ -14,7 +14,7 @@ import {
   FirebaseApp,
 } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { firebaseConfig } from '../../firebaseapi';
+import { firebaseConfig } from '../firebaseapi';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 
 
