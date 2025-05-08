@@ -2,37 +2,38 @@
   <h1>Exercise Progress</h1>
 
   <div class="date-picker-container">
-    <!-- Start Date -->
     <div class="date-picker">
-      <label for="start-date">Start Date:</label>
-      <input type="date" id="start-date" name="startDate" />
+      <label for="exercise-start-date">Start Date:</label>
+      <input type="date" id="exercise-start-date" name="startDate" />
     </div>
 
-    <!-- Exercise Dropdown -->
     <div class="date-picker">
-      <label for="exercise-select">Exercise:</label>
-      <select id="exercise-select" class="exercise-dropdown">
-        <option *ngFor="let exercise of exercises" [value]="exercise">
-          {{ exercise }}
-        </option>
-      </select>
+      <label for="exercise-end-date">End Date:</label>
+      <input type="date" id="exercise-end-date" name="endDate" />
     </div>
 
-    <!-- End Date -->
-    <div class="date-picker">
-      <label for="end-date">End Date:</label>
-      <input type="date" id="end-date" name="endDate" />
-    </div>
+    <button (click)="retrieveExerciseStatistics()" class="btn btn-primary">
+      Load Exercises
+    </button>
   </div>
-
-  <br />
-
-  <button (click)="retrieveStatistics()" class="btn btn-primary">Submit</button>
 
   <br /><br />
 
-  <!-- Chart Section -->
+  <div class="date-picker">
+    <label for="exercise-select">Exercise:</label>
+    <select
+      id="exercise-select"
+      class="exercise-dropdown"
+      (change)="onExerciseChange($event)">
+      <option *ngFor="let exercise of exercises" [value]="exercise.id">
+        {{ exercise.name }}
+      </option>
+    </select>
+  </div>
+
+  <br /><br />
+
   <div class="chart-container">
-    <canvas #myChartCanvas></canvas>
+    <canvas #exerciseChartCanvas></canvas>
   </div>
 </div>

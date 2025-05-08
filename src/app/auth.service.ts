@@ -129,4 +129,8 @@ export class AuthService implements OnInit {
       console.error('Trying to set units for null user!');
     }
   }
+
+  getUserSync(): User | null {
+    return this.userSubject.value;
+  }
 }
