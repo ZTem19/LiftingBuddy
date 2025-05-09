@@ -1,13 +1,15 @@
-.page{
-    background-color: #070f2b;
+.page {
+  background-color: #070f2b;
+  max-height: fit-content;
+  min-height: 100dvh;
 }
 
-h1{
-    font-size: 5rem;
-    color: #F0F0F0
+h1 {
+  font-size: 5rem;
+  color: #f0f0f0;
 }
 
-label{
-    font-size: 1rem;
-    color: #F0F0F0
+label {
+  font-size: 1rem;
+  color: #f0f0f0;
 }

@@ -20,5 +20,23 @@ Hamstrings/Calves: orange
 
 */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@media screen and (max-width: 800px) {
+  html * {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  html * {
+    font-size: 0.7rem;
+  }
+}
