@@ -3,7 +3,13 @@
 }
 
 
-h1, h2, li, p
+h1, h2, li, p, th, td
 {
     color: #F0F0F0
+}
+
+th, td {
+    border: 1px solid white;
+    padding: 8px 12px;
+    text-align: center;
 }
