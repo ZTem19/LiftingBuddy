@@ -1,15 +1,21 @@
-.page{
-    background-color: #070f2b;
+.page {
+  background-color: #070f2b;
+  max-height: fit-content;
+  min-height: 100dvh;
 }
 
-
-h1, h2, li, p, th, td
-{
-    color: #F0F0F0
+h1,
+h2,
+li,
+p,
+th,
+td {
+  color: #f0f0f0;
 }
 
-th, td {
-    border: 1px solid white;
-    padding: 8px 12px;
-    text-align: center;
+th,
+td {
+  border: 1px solid white;
+  padding: 8px 12px;
+  text-align: center;
 }

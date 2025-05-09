@@ -3,6 +3,8 @@
   background-color: #1b1a55;
   max-height: fit-content;
   min-height: 100dvh;
+  width: 100vw;
+  min-width: fit-content;
 }
 
 .page > p {

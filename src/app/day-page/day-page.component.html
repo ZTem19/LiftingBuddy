@@ -1,4 +1,4 @@
-<div class="page w-100">
+<div class="page">
   @if(addingWorkout){
   <app-addworkout (close)="toggleMenu()" [selectedDate]="selectedDate" />
   }
@@ -39,7 +39,8 @@
         <td>
           @for( set of exerciseSet.sets; track set){
           <div class="setsCell">
-            Reps: {{ set.numOfReps }}, Weight {{ set.weight | weightUnit: userUnits}}
+            Reps: {{ set.numOfReps }}, Weight
+            {{ set.weight | weightUnit : userUnits }}
           </div>
           }
         </td>

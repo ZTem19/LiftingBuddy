@@ -11,6 +11,7 @@
       [routerLinkActive]="'route_active'"
       [routerLinkActiveOptions]="{ exact: true }"
       [routerLink]="''"
+      (click)="onNavbarBtnClick()"
     >
       Home
     </p>
@@ -20,6 +21,7 @@
       [routerLinkActive]="'route_active'"
       [routerLinkActiveOptions]="{ exact: true }"
       [routerLink]="link[1]"
+      (click)="onNavbarBtnClick()"
     >
       {{ link[0] }}
     </p>

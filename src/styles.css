@@ -29,14 +29,14 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-@media (max-width < 1000) {
-  .html {
-    font-size: 0.75em;
+@media screen and (max-width: 800px) {
+  html * {
+    font-size: 0.9rem;
   }
 }
 
-@media (max-width < 600) {
-  .html {
-    font-size: 0.5em;
+@media screen and (max-width: 600px) {
+  html * {
+    font-size: 0.7rem;
   }
 }
