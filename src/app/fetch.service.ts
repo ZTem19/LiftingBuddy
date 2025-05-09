@@ -46,8 +46,27 @@ export class FetchService implements OnInit {
   ): Promise<ExerciseSet[]> {
     // query to get data documents for the given user and day
 
-    const startOfDayUTC = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), 0, 0, 0));
-    const endOfDayUTC = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), 23, 59, 59, 999));
+    const startOfDayUTC = new Date(
+      Date.UTC(
+        day.getUTCFullYear(),
+        day.getUTCMonth(),
+        day.getUTCDate(),
+        0,
+        0,
+        0
+      )
+    );
+    const endOfDayUTC = new Date(
+      Date.UTC(
+        day.getUTCFullYear(),
+        day.getUTCMonth(),
+        day.getUTCDate(),
+        23,
+        59,
+        59,
+        999
+      )
+    );
 
     const dataQuery = query(
       this.dataCollection,
@@ -136,15 +155,34 @@ export class FetchService implements OnInit {
     // transaction ensures if one thing fails nothing is committed
     return await runTransaction(this.firestore, async (transaction: any) => {
       // check if data already exists
-      const startOfDayUTC = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), 0, 0, 0));
-      const endOfDayUTC = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), 23, 59, 59, 999));
+      const startOfDayUTC = new Date(
+        Date.UTC(
+          day.getUTCFullYear(),
+          day.getUTCMonth(),
+          day.getUTCDate(),
+          0,
+          0,
+          0
+        )
+      );
+      const endOfDayUTC = new Date(
+        Date.UTC(
+          day.getUTCFullYear(),
+          day.getUTCMonth(),
+          day.getUTCDate(),
+          23,
+          59,
+          59,
+          999
+        )
+      );
       const dataQuery = query(
         this.dataCollection,
         where('userId', '==', userId),
         where('date', '>=', Timestamp.fromDate(startOfDayUTC)),
         where('date', '<=', Timestamp.fromDate(endOfDayUTC))
       );
-      
+
       const dataSnapshot = await getDocs(dataQuery);
       let dataDocId: string;
       let existingDataDoc;
@@ -198,8 +236,27 @@ export class FetchService implements OnInit {
     const setsRef = collection(this.firestore, 'sets');
 
     //Find the data document  for the user, day, and exercise
-    const startOfDayUTC = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), 0, 0, 0));
-    const endOfDayUTC = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), 23, 59, 59, 999));
+    const startOfDayUTC = new Date(
+      Date.UTC(
+        day.getUTCFullYear(),
+        day.getUTCMonth(),
+        day.getUTCDate(),
+        0,
+        0,
+        0
+      )
+    );
+    const endOfDayUTC = new Date(
+      Date.UTC(
+        day.getUTCFullYear(),
+        day.getUTCMonth(),
+        day.getUTCDate(),
+        23,
+        59,
+        59,
+        999
+      )
+    );
     const dataQuery = query(
       this.dataCollection,
       where('userId', '==', userId),
@@ -338,8 +395,27 @@ export class FetchService implements OnInit {
   ): Promise<Map<string, ExerciseSet[]>> {
     const map = new Map<string, ExerciseSet[]>();
 
-    const startUTC = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(), 0, 0, 0));
-    const endUTC = new Date(Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate(), 23, 59, 59, 999));
+    const startUTC = new Date(
+      Date.UTC(
+        startDate.getUTCFullYear(),
+        startDate.getUTCMonth(),
+        startDate.getUTCDate(),
+        0,
+        0,
+        0
+      )
+    );
+    const endUTC = new Date(
+      Date.UTC(
+        endDate.getUTCFullYear(),
+        endDate.getUTCMonth(),
+        endDate.getUTCDate(),
+        23,
+        59,
+        59,
+        999
+      )
+    );
     const q = query(
       this.dataCollection,
       where('userId', '==', userid),
@@ -412,13 +488,22 @@ export class FetchService implements OnInit {
     // start query for exercises
     const exerciseListTask = getDocs(this.exerciseCollection);
 
-    const startUTC = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(), 0, 0, 0));
-    const endUTC = new Date(Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate(), 23, 59, 59, 999));
+    // const startUTC = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(), 0, 0, 0));
+    // const endUTC = new Date(Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate(), 23, 59, 59, 999));
+
+    endDate.setUTCDate(endDate.getUTCDate() + 1);
     const dataQuery = query(
       this.dataCollection,
       where('userId', '==', userId),
-      where('date', '>=', Timestamp.fromDate(startUTC)),
-      where('date', '<=', Timestamp.fromDate(endUTC))
+      where('date', '>=', Timestamp.fromDate(startDate)),
+      where('date', '<=', Timestamp.fromDate(endDate))
+    );
+
+    console.log(
+      'Getting data from: ' +
+        startDate.toISOString() +
+        ' to: ' +
+        endDate.toISOString()
     );
 
     let dataSnapshot: QuerySnapshot = await getDocs(dataQuery);

@@ -67,6 +67,7 @@ export class DayPageComponent implements OnInit {
     const currentDate = new Date();
     const past = new Date();
     past.setDate(currentDate.getDate() - 100);
+    currentDate.setDate(currentDate.getDate() + 1);
     this.getData(past, currentDate);
   }
 
@@ -83,7 +84,7 @@ export class DayPageComponent implements OnInit {
       endDate
     );
     this.isLoadingData = false;
-    console.log(this.dataMap)
+    console.log(this.dataMap);
   }
 
   changeDate(date: Date): void {

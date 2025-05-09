@@ -34,4 +34,6 @@
   background-color: transparent !important;
   box-shadow: none !important;
   color: white;
+  border: none;
+  margin-right: 1em;
 }
