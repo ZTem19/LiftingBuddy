@@ -23,7 +23,7 @@
       [class.daycellcolor]="isExerciseOnDate(day)"
       [style.color]="getMuscleGroupColor(day)"
     >
-      {{ day.getDate() }}
+      {{ day.getUTCDate() }}
     </span>
   </p>
   }

@@ -46,14 +46,19 @@ export class CalendarComponent implements OnInit {
 
     //Tweak how long the array is so that the dates end up on the correct day of the week
     let max = 90;
-    max = max + (dayOfWeek - 6);
+    if (this.firefoxStyle) {
+      max = max + (dayOfWeek - 6);
+    } else {
+      max = max + (dayOfWeek - 5);
+    }
 
     this.calendarDates = [];
     let activeDate = new Date();
 
     for (let i = max; i >= 0; i--) {
       activeDate.setTime(currentDate.getTime());
-      activeDate.setDate(currentDate.getDate() - i);
+      activeDate.setUTCDate(currentDate.getUTCDate() - i);
+
       this.calendarDates.push(new Date(activeDate));
     }
 
