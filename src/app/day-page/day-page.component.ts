@@ -76,6 +76,8 @@ export class DayPageComponent implements OnInit {
   }
 
   async getData(startDate: Date, endDate: Date): Promise<void> {
+    startDate.setDate(startDate.getDate() + 2);
+    endDate.setDate(endDate.getDate() - 1);
     this.dataMap = await this.dataService.getDataInDateRange(
       startDate,
       endDate,
