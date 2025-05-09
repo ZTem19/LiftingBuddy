@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { eSet, Exercise, MuscleGroup } from '../../data types/data-types';
 import { DatePipe as dPipe } from '@angular/common';
 import { AuthService } from '../auth.service';
+import { parseActionCodeURL } from 'firebase/auth';
 
 @Component({
   selector: 'app-addworkout',
@@ -105,10 +106,29 @@ export class AddworkoutComponent implements OnInit {
     }
   }
 
-  addExercise() {
+  addExercise(): boolean {
     const name = this.exerciseName.trim();
     const description = this.exerciseDes.trim();
     const mGroup = parseInt(MuscleGroup[this.exerciseMGroup]);
+
+    console.log(mGroup);
+
+    if (name.trim() == '' || description.trim() == '') {
+      this.entryError = true;
+      this.errorMsg = 'Added exercise needs to have name and description';
+      return false;
+    }
+
+    if (
+      mGroup == null ||
+      mGroup == undefined ||
+      mGroup == 0 ||
+      Number.isNaN(mGroup)
+    ) {
+      this.entryError = true;
+      this.errorMsg = 'Added exercise needs to have muscle group';
+      return false;
+    }
 
     this.selectedExercise = {
       id: '',
@@ -116,11 +136,14 @@ export class AddworkoutComponent implements OnInit {
       muscleGroup: mGroup,
       description: description,
     };
+    return true;
   }
 
   validateInput(): boolean {
     if (this.addingExercise) {
-      this.addExercise();
+      if (!this.addExercise()) {
+        return false;
+      }
     }
 
     console.log('Exercise: ' + JSON.stringify(this.selectedExercise));
@@ -133,6 +156,15 @@ export class AddworkoutComponent implements OnInit {
         if (set.weight == 0 || set.numOfReps == 0) {
           this.entryError = true;
           this.errorMsg = 'Sets weight and or reps cannont 0.';
+          return false;
+        }
+
+        if (
+          !this.isValidNumber(set.weight) ||
+          !this.isValidNumber(set.numOfReps)
+        ) {
+          this.entryError = true;
+          this.errorMsg = 'Sets need to be a number';
           return false;
         }
       }
@@ -153,5 +185,10 @@ export class AddworkoutComponent implements OnInit {
 
     this.entryError = false;
     return true;
+  }
+
+  isValidNumber(input: any): boolean {
+    const n = parseInt(input);
+    return !Number.isNaN(n);
   }
 }
