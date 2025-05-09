@@ -42,15 +42,16 @@ export class CalendarComponent implements OnInit {
 
     let currentDate = new Date();
     this.selectedDay = currentDate;
-    let dayOfWeek = currentDate.getDay();
+    let dayOfWeek = currentDate.getUTCDay();
 
     //Tweak how long the array is so that the dates end up on the correct day of the week
     let max = 90;
-    if (this.firefoxStyle) {
-      max = max + (dayOfWeek - 6);
-    } else {
-      max = max + (dayOfWeek - 5);
-    }
+    // if (this.firefoxStyle) {
+    //   max = max + (dayOfWeek - 6);
+    // } else {
+    //   max = max + (dayOfWeek - 5);
+    // }
+    max = max + (dayOfWeek - 6);
 
     this.calendarDates = [];
     let activeDate = new Date();
