@@ -78,10 +78,10 @@ export class DayPageComponent implements OnInit {
   async getData(startDate: Date, endDate: Date): Promise<void> {
     this.dataMap = await this.dataService.getDataInDateRange(
       startDate,
-      endDate,
-      this.userID
+      endDate
     );
     this.isLoadingData = false;
+    console.log(this.dataMap)
   }
 
   changeDate(date: Date): void {
